@@ -9,1540 +9,766 @@
   --primary: #4F46E5;
   --primary-light: #EEF2FF;
   --primary-dark: #3730A3;
+  --accent: #D97706;
+  --accent-light: #FEF3C7;
   --success: #059669;
-  --success-light: #ECFDF5;
-  --warning: #D97706;
-  --warning-light: #FFFBEB;
   --danger: #DC2626;
-  --danger-light: #FEF2F2;
   --bg: #F8FAFC;
   --card: #FFFFFF;
   --text: #1E293B;
   --text-secondary: #64748B;
   --border: #E2E8F0;
-  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-  --shadow-lg: 0 10px 25px rgba(0,0,0,.08);
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
   --radius: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 8px;
+  --sidebar-bg: #1e293b;
+  --sidebar-text: #cbd5e1;
+  --sidebar-active: #6366f1;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans HK', sans-serif;
   background: var(--bg); color: var(--text); line-height: 1.7;
-  min-height: 100vh;
+  display: flex; min-height: 100vh;
 }
-/* Progress Bar */
-.progress-wrap {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: var(--card); box-shadow: var(--shadow); padding: 12px 24px;
-  display: flex; align-items: center; gap: 16px;
-}
-.progress-wrap .course-title {
-  font-weight: 700; font-size: 15px; color: var(--primary-dark); white-space: nowrap;
-}
-.progress-bar-outer {
-  flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;
-}
-.progress-bar-inner {
-  height: 100%; background: linear-gradient(90deg, var(--primary), #7C3AED);
-  border-radius: 4px; transition: width .4s ease;
-}
-.progress-text { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
-/* Chapter Nav */
-.chapter-nav {
-  position: fixed; top: 56px; left: 0; bottom: 0; width: 220px;
-  background: var(--card); box-shadow: var(--shadow); padding: 16px 0;
-  overflow-y: auto; z-index: 999;
-}
-.chapter-nav h3 { font-size: 12px; color: var(--text-secondary); padding: 0 20px 8px; text-transform: uppercase; letter-spacing: 1px; }
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 20px; cursor: pointer; font-size: 14px; color: var(--text-secondary);
-  border-left: 3px solid transparent; transition: all .2s;
-}
-.nav-item:hover { background: var(--primary-light); color: var(--primary); }
-.nav-item.active { background: var(--primary-light); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
-.nav-item.completed { color: var(--success); }
-.nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
-.nav-item.active .nav-dot { background: var(--primary); }
-.nav-item.completed .nav-dot { background: var(--success); }
-/* Main Content */
-.main-content { margin-left: 220px; padding: 80px 40px 60px; max-width: 900px; }
-.chapter { display: none; }
-.chapter.active { display: block; animation: fadeIn .4s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-/* Cards */
-.card {
-  background: var(--card); border-radius: var(--radius-lg); padding: 28px;
-  box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border);
-}
-.card h2 { font-size: 20px; color: var(--primary-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.card h3 { font-size: 17px; color: var(--text); margin-bottom: 8px; }
-.card p, .card li { color: var(--text-secondary); font-size: 15px; margin-bottom: 8px; }
-.card ul { padding-left: 20px; }
-.chapter-title {
-  font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-bottom: 6px;
-}
-.chapter-subtitle { font-size: 16px; color: var(--text-secondary); margin-bottom: 28px; }
-/* Icon cards */
-.icon-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.icon-card {
-  background: var(--card); border-radius: var(--radius); padding: 24px; text-align: center;
-  box-shadow: var(--shadow); border: 1px solid var(--border); transition: transform .2s;
-}
-.icon-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.icon-card .icon { font-size: 36px; margin-bottom: 10px; }
-.icon-card h4 { font-size: 15px; color: var(--text); margin-bottom: 4px; }
-.icon-card p { font-size: 13px; color: var(--text-secondary); }
-/* Badge */
-.badge {
-  display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
-}
-.badge-primary { background: var(--primary-light); color: var(--primary); }
-.badge-success { background: var(--success-light); color: var(--success); }
-.badge-warning { background: var(--warning-light); color: var(--warning); }
-.badge-danger { background: var(--danger-light); color: var(--danger); }
+/* Sidebar */
+.sidebar { width: 280px; min-width: 280px; background: var(--sidebar-bg); color: var(--sidebar-text); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: transform 0.3s; }
+.sidebar-close-btn { display: none; position: absolute; top: 8px; right: 12px; background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; z-index: 10; padding: 8px; line-height: 1; }
+.sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.sidebar-header h3 { font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.sidebar-header .course-title { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.4; }
+.sidebar-progress { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
+.progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--sidebar-active); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 12px 0; }
+.nav-section { padding: 8px 20px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; transition: all 0.2s; border-left: 3px solid transparent; }
+.nav-section:hover { background: rgba(255,255,255,0.05); }
+.nav-section.active { background: rgba(99,102,241,0.15); border-left-color: var(--sidebar-active); color: #fff; }
+.nav-section.completed { color: #94a3b8; }
+.nav-section.completed .nav-icon { background: var(--success); color: #fff; }
+.nav-section.locked { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+.nav-section.locked .nav-icon { background: rgba(255,255,255,0.08); color: #64748b; }
+.nav-icon { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--sidebar-text); transition: all 0.3s; }
+.nav-section.active .nav-icon { background: var(--sidebar-active); color: #fff; }
+.nav-info .nav-label { font-size: 13px; font-weight: 600; }
+.nav-info .nav-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+.nav-section.active .nav-info .nav-sub { color: #94a3b8; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: #64748b; }
+.study-timer { padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.timer-icon { font-size: 16px; }
+.timer-display { color: #fff; font-weight: 700; font-variant-numeric: tabular-nums; }
+.timer-label { color: #94a3b8; font-size: 11px; }
+/* Main */
+.main { margin-left: 280px; flex: 1; padding: 40px; max-width: 900px; }
+.section { display: none; animation: fadeSlide 0.4s ease; }
+.section.active { display: block; }
+@keyframes fadeSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.section-header { margin-bottom: 32px; }
+.section-badge { display: inline-block; padding: 4px 14px; background: #dbeafe; color: var(--primary-dark); border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+.section-header h1 { font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.section-header .duration { font-size: 14px; color: var(--text-secondary); }
+/* Content components */
+.card { background: var(--card); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.card-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text); }
+.highlight-box { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid var(--primary); padding: 20px 24px; border-radius: var(--radius-sm); margin: 20px 0; }
+.highlight-box.warning { background: linear-gradient(135deg, #fef3c7, #fde68a); border-left-color: var(--accent); }
+.highlight-box.danger { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-left-color: var(--danger); }
+.highlight-box.success { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-left-color: var(--success); }
+.script-block { background: #f1f5f9; padding: 20px 24px; border-radius: var(--radius-sm); font-style: italic; color: #475569; position: relative; margin: 16px 0; line-height: 1.8; }
+.script-block::before { content: '🎙️ 旁白稿'; position: absolute; top: -10px; left: 16px; background: #475569; color: #fff; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-style: normal; }
+.flow-steps { display: flex; gap: 16px; margin: 20px 0; flex-wrap: wrap; }
+.flow-step { flex: 1; min-width: 140px; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; box-shadow: var(--shadow); }
+.flow-step .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
+.flow-step h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.flow-step p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.flow-arrow { display: flex; align-items: center; font-size: 24px; color: var(--primary); font-weight: 700; }
+.strategy-grid { display: flex; gap: 16px; margin: 20px 0; flex-wrap: wrap; }
+.strategy-card { flex: 1; min-width: 200px; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 24px; text-align: center; box-shadow: var(--shadow); }
+.strategy-card .icon { font-size: 36px; margin-bottom: 12px; }
+.strategy-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.strategy-card p { font-size: 13px; color: var(--text-secondary); }
+.callout-grid { display: flex; gap: 16px; flex-wrap: wrap; }
+.callout-item { flex: 1; min-width: 180px; background: var(--card); border-radius: var(--radius-sm); padding: 20px; text-align: center; box-shadow: var(--shadow); border-top: 4px solid var(--primary); }
 /* Chat bubbles */
 .chat-scene { max-width: 650px; margin: 0 auto; }
-.chat-msg {
-  display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;
-}
+.chat-msg { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
 .chat-msg.cc { flex-direction: row; }
 .chat-msg.parent { flex-direction: row-reverse; }
-.chat-avatar {
-  width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0; font-weight: 700;
-}
-.chat-msg.cc .chat-avatar { background: var(--primary-light); color: var(--primary); }
-.chat-msg.parent .chat-avatar { background: var(--warning-light); color: var(--warning); }
-.chat-bubble {
-  max-width: 75%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.6;
-}
+.chat-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; font-weight: 700; }
+.chat-msg.cc .chat-avatar { background: #EEF2FF; color: var(--primary-dark); }
+.chat-msg.parent .chat-avatar { background: #FEF3C7; color: var(--accent); }
+.chat-bubble { max-width: 75%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.6; }
 .chat-msg.cc .chat-bubble { background: #F1F5F9; color: var(--text); border-bottom-left-radius: 4px; }
-.chat-msg.parent .chat-bubble { background: var(--primary-light); color: var(--text); border-bottom-right-radius: 4px; }
-.chat-msg.system .chat-bubble { background: var(--warning-light); color: var(--text); font-style: italic; max-width: 90%; margin: 0 auto; text-align: center; border-radius: 12px; }
+.chat-msg.parent .chat-bubble { background: #EEF2FF; color: var(--text); border-bottom-right-radius: 4px; }
+.chat-msg.system .chat-bubble { background: var(--accent-light); color: var(--text); font-style: italic; max-width: 90%; margin: 0 auto; text-align: center; border-radius: 12px; }
 .chat-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
-/* Flowchart */
-.flow-wrap { display: flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center; padding: 20px 0; }
-.flow-node {
-  background: var(--primary-light); border: 2px solid var(--primary);
-  border-radius: var(--radius); padding: 14px 18px; text-align: center;
-  font-weight: 600; font-size: 14px; color: var(--primary-dark); min-width: 80px;
-}
-.flow-arrow { font-size: 20px; color: var(--primary); margin: 0 4px; }
-/* Steps */
-.step-list { counter-reset: step; }
-.step-item {
-  counter-increment: step; display: flex; gap: 16px; align-items: flex-start;
-  padding: 20px 0; border-bottom: 1px solid var(--border);
-}
-.step-item:last-child { border-bottom: none; }
-.step-num {
-  width: 40px; height: 40px; border-radius: 50%; background: var(--primary);
-  color: white; display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 16px; flex-shrink: 0;
-}
-.step-content h4 { font-size: 16px; color: var(--text); margin-bottom: 4px; }
-.step-content p { font-size: 14px; color: var(--text-secondary); }
-/* Checklist */
-.checklist { list-style: none; }
-.checklist li {
-  display: flex; align-items: flex-start; gap: 12px; padding: 14px 0;
-  border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text);
-}
-.checklist li:last-child { border-bottom: none; }
-.check-icon {
-  width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--border);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  cursor: pointer; transition: all .2s; margin-top: 1px;
-}
-.check-icon.checked { background: var(--success); border-color: var(--success); color: white; font-size: 14px; }
-.check-icon:not(.checked):hover { border-color: var(--success); }
-/* Table */
+/* Tables & steps */
 .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .data-table th { background: var(--primary-light); color: var(--primary-dark); padding: 10px 8px; text-align: center; font-weight: 600; border: 1px solid var(--border); }
 .data-table td { padding: 8px; text-align: center; border: 1px solid var(--border); color: var(--text-secondary); }
 .data-table td.check { color: var(--success); font-weight: 700; }
-.data-table td.cross { color: #CBD5E1; }
 .data-table .phase-header { background: var(--primary); color: white; font-weight: 700; }
-/* Buttons */
-.btn {
-  display: inline-flex; align-items: center; gap: 6px; padding: 10px 24px;
-  border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
-  border: none; transition: all .2s; text-decoration: none;
-}
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: var(--primary-dark); }
-.btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
-.btn-outline:hover { background: var(--primary-light); }
-.btn-success { background: var(--success); color: white; }
-.btn-success:hover { opacity: .9; }
-.btn-lg { padding: 14px 32px; font-size: 16px; border-radius: 12px; }
-.btn-locked { background: var(--border); color: var(--text-secondary); cursor: not-allowed; opacity: .6; pointer-events: none; }
-.btn-locked:hover { background: var(--border); }
-.nav-buttons { display: flex; justify-content: space-between; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
-/* Toast */
-.toast {
-  position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 2000;
-  background: var(--warning); color: white; padding: 14px 28px; border-radius: 10px;
-  font-size: 14px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  opacity: 0; transition: opacity .3s ease, transform .3s ease; transform: translateX(-50%) translateY(-12px);
-  pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-/* Locked nav */
-.nav-item.locked { color: #CBD5E1; cursor: not-allowed; }
-.nav-item.locked:hover { background: transparent; color: #CBD5E1; }
-.nav-item.locked .nav-dot { background: #CBD5E1; }
-/* Lock indicator on next button */
-.lock-icon { display: inline-block; margin-left: 4px; }
-/* Quiz */
-.quiz-card { background: var(--card); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow); margin: 20px 0; border: 1px solid var(--border); }
-.quiz-question { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
-.quiz-option {
-  display: block; width: 100%; text-align: left; padding: 12px 16px; margin-bottom: 8px;
-  border: 2px solid var(--border); border-radius: var(--radius); background: var(--card);
-  cursor: pointer; font-size: 15px; transition: all .2s; color: var(--text);
-}
-.quiz-option:hover { border-color: var(--primary); background: var(--primary-light); }
-.quiz-option.correct { border-color: var(--success); background: var(--success-light); color: var(--success); }
-.quiz-option.wrong { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
-.quiz-option.final-selected { background: var(--primary-light); border-color: var(--primary); color: var(--primary); font-weight: 600; }
-.quiz-option:disabled { pointer-events: none; }
-.quiz-feedback { margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 14px; display: none; }
-.quiz-feedback.show { display: block; }
-.quiz-feedback.correct { background: var(--success-light); color: var(--success); }
-.quiz-feedback.wrong { background: var(--danger-light); color: var(--danger); }
-.quiz-retry-btn { display: none; margin-top: 8px; padding: 6px 16px; border: 1px solid var(--warning); background: #FEF3C7; color: #B45309; border-radius: 6px; cursor: pointer; font-size: 13px; }
-.quiz-retry-btn.show { display: inline-block; }
-.quiz-retry-btn:hover { background: var(--warning); color: white; }
-/* AI Chat */
-.ai-chat-wrap {
-  border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
-  background: var(--card);
-}
-.ai-chat-header { padding: 16px 20px; background: var(--primary-light); font-weight: 700; color: var(--primary-dark); display: flex; align-items: center; gap: 8px; }
-.ai-chat-body { padding: 20px; max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.ai-chat-input-area { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
-.ai-chat-input-area select { flex: 1; padding: 10px 14px; border: 2px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--card); color: var(--text); }
-.ai-chat-input-area .btn { flex-shrink: 0; }
-.ai-option-card { display: block; width: 100%; padding: 12px 16px; margin-bottom: 8px; border: 2px solid var(--border); border-radius: 8px; background: var(--card); cursor: pointer; text-align: left; font-size: 14px; line-height: 1.6; color: var(--text); transition: all 0.15s; }
-.ai-option-card:hover { border-color: var(--primary); background: var(--primary-light); }
-.ai-option-card:disabled { pointer-events: none; opacity: .5; }
-.ai-option-card.selected-correct { border-color: var(--success); background: var(--success-light); }
-.ai-option-card.selected-wrong { border-color: var(--danger); background: var(--danger-light); }
-.ai-option-card .ai-opt-letter { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; background: var(--primary-light); color: var(--primary); border-radius: 50%; margin-right: 8px; font-weight: 700; font-size: 13px; flex-shrink: 0; }
-#ai-options { padding: 16px 20px; border-top: 1px solid var(--border); }
-/* Certificate */
-.certificate-overlay {
-  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 2000;
-  background: rgba(0,0,0,.6); align-items: center; justify-content: center;
-}
-.certificate-overlay.show { display: flex; }
-.certificate {
-  background: linear-gradient(135deg, #FFFBEB 0%, #FFF7ED 25%, #FEF2F2 50%, #EEF2FF 75%, #F0FDF4 100%);
-  border: 6px solid #D4A574; border-radius: 8px; padding: 48px 40px 40px;
-  text-align: center; max-width: 640px; width: 90%; position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,.2);
-}
-.certificate::before { content: ''; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 2px solid #D4A574; border-radius: 4px; pointer-events: none; }
-.certificate .cert-title { font-size: 32px; font-weight: 800; color: #92400E; margin-bottom: 8px; }
-.certificate .cert-subtitle { font-size: 16px; color: #78716C; margin-bottom: 24px; }
-.certificate .cert-name { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; }
-.certificate .cert-body { font-size: 15px; color: var(--text-secondary); line-height: 2; margin-bottom: 20px; }
-.certificate .cert-date { font-size: 13px; color: #A8A29E; margin-top: 24px; }
-.certificate .cert-seal { font-size: 48px; margin-top: 12px; }
-.certificate .btn { margin-top: 20px; }
-/* Score stars */
-.score-display { text-align: center; padding: 20px; }
-.score-display .score-num { font-size: 48px; font-weight: 800; color: var(--primary); }
-.score-display .score-label { font-size: 14px; color: var(--text-secondary); }
-/* Responsive */
-@media (max-width: 768px) {
-  .chapter-nav { display: none; }
-  .main-content { margin-left: 0; padding: 64px 16px 40px; }
-  .icon-cards { grid-template-columns: 1fr 1fr; }
-}
-/* Highlight */
-.highlight { background: linear-gradient(180deg, transparent 60%, #FEF08A 60%); padding: 0 4px; }
-/* Tips box */
-.tips-box {
-  background: var(--warning-light); border-left: 4px solid var(--warning);
-  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 14px;
-}
-.tips-box strong { color: var(--warning); }
-/* Script template */
-.script-tpl {
-  background: #F8FAFC; border: 1px dashed var(--border); border-radius: var(--radius);
-  padding: 20px; font-size: 14px; color: var(--text); margin: 12px 0; line-height: 1.8;
-  white-space: pre-wrap;
-}
-.script-tpl .var { color: var(--primary); font-weight: 600; }
-/* Tab */
-.tab-wrap { display: flex; gap: 4px; margin-bottom: 16px; background: var(--border); border-radius: 10px; padding: 4px; }
-.tab-btn {
-  flex: 1; padding: 10px 16px; border: none; background: transparent;
-  border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;
-  color: var(--text-secondary); transition: all .2s;
-}
+.step-list { counter-reset: step; }
+.step-item { counter-increment: step; display: flex; gap: 16px; align-items: flex-start; padding: 18px 0; border-bottom: 1px solid var(--border); }
+.step-item:last-child { border-bottom: none; }
+.step-num-big { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+.step-content h4 { font-size: 16px; color: var(--text); margin-bottom: 4px; }
+.step-content p { font-size: 14px; color: var(--text-secondary); }
+.tab-wrap { display: flex; gap: 4px; margin-bottom: 16px; background: var(--border); border-radius: 10px; padding: 4px; flex-wrap: wrap; }
+.tab-btn { flex: 1; min-width: 70px; padding: 8px 12px; border: none; background: transparent; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--text-secondary); transition: all .2s; }
 .tab-btn.active { background: var(--card); color: var(--primary); font-weight: 600; box-shadow: var(--shadow); }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
+.script-tpl { background: #F8FAFC; border: 1px dashed var(--border); border-radius: var(--radius); padding: 18px; font-size: 14px; color: var(--text); margin: 12px 0; line-height: 1.8; white-space: pre-wrap; }
+.script-tpl .var { color: var(--primary); font-weight: 600; }
+.highlight { background: linear-gradient(180deg, transparent 60%, #FEF08A 60%); padding: 0 4px; }
+.tips-box { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 14px; }
+.tips-box strong { color: var(--accent); }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge-primary { background: var(--primary-light); color: var(--primary); }
+.badge-warning { background: var(--accent-light); color: var(--accent); }
+.badge-success { background: #ECFDF5; color: var(--success); }
+/* Quiz */
+.quiz-card { background: var(--card); border-radius: var(--radius); padding: 28px; margin: 24px 0; box-shadow: var(--shadow-lg); border: 2px solid var(--border); }
+.quiz-card.answered-correct { border-color: var(--success); }
+.quiz-card.answered-wrong { border-color: var(--danger); }
+.quiz-question { font-size: 16px; font-weight: 600; margin-bottom: 20px; line-height: 1.7; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option { display: flex; align-items: center; gap: 12px; padding: 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; min-height: 48px; }
+.quiz-option:hover { border-color: var(--primary-light); background: #f0f7ff; }
+.quiz-option.selected { border-color: var(--primary); background: #dbeafe; }
+.quiz-option.correct { border-color: var(--success) !important; background: #ecfdf5 !important; }
+.quiz-option.wrong { border-color: var(--danger) !important; background: #fef2f2 !important; }
+.quiz-option-label { width: 30px; height: 30px; min-width: 30px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+.quiz-feedback { display: none; margin-top: 16px; padding: 16px; border-radius: var(--radius-sm); font-size: 14px; line-height: 1.7; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: #ecfdf5; color: #065f46; }
+.quiz-feedback.wrong { background: #fef2f2; color: #991b1b; }
+/* AI Dialogue */
+.dialogue-container { background: var(--card); border-radius: var(--radius); padding: 28px; margin: 24px 0; box-shadow: var(--shadow-lg); border: 2px solid var(--border); }
+.dialogue-scenario { background: #f8fafc; padding: 14px 16px; border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+.customer-bubble { background: #f1f5f9; padding: 16px 20px; border-radius: 16px 16px 16px 4px; font-size: 14px; line-height: 1.7; margin-bottom: 16px; border: 1px solid #e2e8f0; }
+.reply-input { width: 100%; min-height: 120px; padding: 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; line-height: 1.7; resize: vertical; }
+.reply-input:focus { border-color: var(--primary-light); outline: none; }
+.dialogue-actions { display: flex; gap: 12px; margin-top: 16px; }
+.ai-feedback-panel { display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.ai-feedback-panel.show { display: block; }
+/* Final task */
+.final-task-container { margin: 24px 0; }
+.final-task-input { width: 100%; min-height: 160px; padding: 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; line-height: 1.8; resize: vertical; }
+.final-task-input:focus { border-color: var(--primary-light); outline: none; }
+.char-counter { text-align: right; font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+/* Score */
+.score-display { text-align: center; margin-bottom: 16px; }
+.score-circle { width: 64px; height: 64px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; }
+.score-circle.high { background: #ecfdf5; color: #065f46; border: 3px solid var(--success); }
+.score-circle.medium { background: #fffbeb; color: #92400e; border: 3px solid var(--accent); }
+.score-circle.low { background: #fef2f2; color: #991b1b; border: 3px solid var(--danger); }
+.keywords-result { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.keyword-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.keyword-tag.found { background: #ecfdf5; color: #065f46; }
+.keyword-tag.missing { background: #fef2f2; color: #991b1b; }
+.eval-dimensions { display: flex; gap: 16px; flex-wrap: wrap; }
+.eval-dim { flex: 1; min-width: 160px; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; }
+.eval-dim h4 { font-size: 14px; margin-bottom: 8px; }
+/* Certificate */
+.cert-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
+.cert-overlay.show { display: flex; }
+.certificate-paper { background: #fff; border-radius: 16px; padding: 40px 32px; max-width: 560px; width: 90%; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+.cert-title { font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
+.cert-sub { font-size: 12px; color: #64748b; letter-spacing: 0.1em; margin-bottom: 24px; }
+.cert-body { font-size: 15px; color: #1e293b; line-height: 2.2; }
+.cert-name { display: inline-block; border-bottom: 2px solid var(--primary); min-width: 100px; padding: 2px 8px; margin: 0 4px; outline: none; }
+.cert-course { font-weight: 700; color: var(--primary-dark); margin: 8px 0; }
+.cert-score { margin: 20px 0 4px; font-size: 16px; font-weight: 600; color: #10b981; }
+.cert-final-score { margin: 4px 0 20px; font-size: 14px; font-weight: 600; color: var(--primary-dark); }
+.cert-footer { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 16px; }
+.cert-actions { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+/* Buttons */
+.btn { display: inline-block; padding: 12px 28px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
+.btn-success { background: var(--success); }
+.btn-success:hover { background: #047857; }
+.section-nav-buttons { display: flex; justify-content: space-between; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+/* Notes & Toast */
+.notes-toggle { position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; border: none; cursor: pointer; font-size: 20px; box-shadow: var(--shadow-lg); z-index: 50; display: flex; align-items: center; justify-content: center; }
+.notes-panel { position: fixed; right: 0; top: 0; bottom: 0; width: 300px; background: var(--card); box-shadow: -4px 0 20px rgba(0,0,0,0.1); z-index: 90; transform: translateX(100%); transition: transform 0.3s; padding: 24px; display: flex; flex-direction: column; }
+.notes-panel.open { transform: translateX(0); }
+.notes-panel h3 { margin-bottom: 12px; }
+.notes-panel textarea { flex: 1; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; font-family: inherit; font-size: 13px; resize: none; }
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; z-index: 300; animation: toastIn 0.3s ease; box-shadow: var(--shadow-lg); }
+.toast.success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.toast.warning { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
+.toast.info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* Mobile */
+.mobile-header { display: none; background: var(--sidebar-bg); color: #fff; padding: 10px 16px; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 50; min-height: 48px; }
+.mobile-header .mh-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1; min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center; }
+.mobile-progress-bar { display: none; height: 3px; background: rgba(255,255,255,0.15); position: sticky; top: 48px; z-index: 49; }
+.mobile-progress-bar .mpb-fill { height: 100%; background: var(--primary-light); transition: width 0.5s ease; width: 0%; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+@media (max-width: 1024px) {
+  body { flex-direction: column; }
+  .sidebar { transform: translateX(-100%); width: 280px; min-width: 280px; }
+  .sidebar.open { transform: translateX(0); z-index: 110; }
+  .sidebar-overlay.show { display: block; }
+  .sidebar-close-btn { display: block; }
+  .mobile-header { display: flex; }
+  .mobile-progress-bar { display: block; }
+  .main { margin-left: 0 !important; padding: 16px 14px 80px; max-width: 100%; }
+  .section-header h1 { font-size: 20px; }
+  .section-badge { font-size: 11px; padding: 3px 10px; }
+  .card { padding: 16px; border-radius: 10px; }
+  .card-title { font-size: 16px; }
+  .flow-steps, .strategy-grid, .callout-grid, .eval-dimensions { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); }
+  .quiz-option { padding: 14px 12px; min-height: 44px; font-size: 13px; }
+  .dialogue-actions { flex-direction: column; }
+  .dialogue-actions .btn { width: 100%; }
+  .final-task-input { min-height: 120px; font-size: 13px; padding: 12px; }
+  .section-nav-buttons { flex-direction: column; gap: 10px; position: sticky; bottom: 0; background: var(--bg); padding: 12px 0; margin-top: 24px; }
+  .section-nav-buttons .btn { width: 100%; text-align: center; padding: 14px 24px; font-size: 15px; }
+  .section-nav-buttons > div { width: 100%; }
+  .notes-toggle { display: none; }
+  .notes-panel { width: 100%; max-width: 340px; }
+  .toast { left: 50%; right: auto; transform: translateX(-50%); bottom: 80px; white-space: nowrap; font-size: 13px; padding: 10px 20px; }
+  .certificate-paper { width: 95%; max-width: 95%; padding: 28px 20px; max-height: 90vh; overflow-y: auto; }
+  .cert-title { font-size: 22px; }
+  .cert-body { font-size: 13px; line-height: 1.8; }
+  .cert-actions { flex-direction: column; }
+  .cert-actions .btn { width: 100%; }
+  .score-circle { width: 56px; height: 56px; font-size: 22px; }
+  .keyword-tag { font-size: 11px; padding: 3px 8px; }
+  .tab-wrap { flex-direction: column; }
+  .tab-btn { font-size: 11px; padding: 6px 10px; }
+  .data-table { font-size: 10px; }
+  .chat-bubble { max-width: 85%; }
+}
 </style>
 </head>
 <body>
 
-<!-- Progress Bar -->
-<div class="progress-wrap">
-  <span class="course-title">CC课前课中SOP</span>
-  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%"></div></div>
-  <span class="progress-text" id="progressText">0/6 章</span>
+<aside class="sidebar" id="sidebar">
+  <button class="sidebar-close-btn" onclick="toggleSidebar()" aria-label="关闭菜单">✕</button>
+  <div class="sidebar-header">
+    <h3>微课</h3>
+    <div class="course-title">CC课前课中SOP · 海外港澳版</div>
+  </div>
+  <div class="sidebar-progress">
+    <div class="progress-label"><span>学习进度</span><span id="progressPercent">0%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+  <div class="study-timer">
+    <span class="timer-icon">⏱</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+    <span class="timer-label">学习时长</span>
+  </div>
+  <div class="sidebar-nav" id="sidebarNav"></div>
+  <div class="sidebar-footer">
+    <button onclick="toggleNotes()" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--sidebar-text);padding:6px 16px;border-radius:20px;font-size:12px;cursor:pointer;width:100%;">📝 学习笔记</button>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="mobile-header">
+  <button class="mh-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+  <span style="flex:1;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="mhTitle">CC课前课中SOP</span>
+  <span style="font-size:12px;opacity:0.7;white-space:nowrap;" id="mhTimer">00:00</span>
 </div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<!-- Chapter Nav -->
-<nav class="chapter-nav">
-  <h3>课程目录</h3>
-  <div class="nav-item active" data-ch="1"><span class="nav-dot"></span>1. CC角色与课前准备</div>
-  <div class="nav-item" data-ch="2"><span class="nav-dot"></span>2. 开场白与异议处理</div>
-  <div class="nav-item" data-ch="3"><span class="nav-dot"></span>3. 挖需四步法</div>
-  <div class="nav-item" data-ch="4"><span class="nav-dot"></span>4. 试听课推荐与定级</div>
-  <div class="nav-item" data-ch="5"><span class="nav-dot"></span>5. 电话收尾与WS跟进</div>
-  <div class="nav-item" data-ch="6"><span class="nav-dot"></span>6. 跟课流程</div>
-</nav>
-
-<!-- Main Content -->
-<div class="main-content">
-
-<!-- ==================== CHAPTER 1 ==================== -->
-<div class="chapter active" id="ch1">
-  <div class="chapter-title">第1章 CC角色认知与课前准备</div>
-  <div class="chapter-subtitle">理解CC的核心角色、课前电话的目的，以及三种必备的提问方式</div>
-
-  <div class="card">
-    <h2>🎯 CC角色定位</h2>
-    <p>CC（Course Consultant / 课程顾问）是连接<strong>家长</strong>与<strong>优质课程</strong>的桥梁。你的核心任务不是"卖课"，而是帮助家长发现孩子的学习需求，并提供合适的解决方案。</p>
-    <div class="icon-cards">
-      <div class="icon-card"><div class="icon">🎓</div><h4>教育顾问</h4><p>专业诊断学习问题</p></div>
-      <div class="icon-card"><div class="icon">🤝</div><h4>信任桥梁</h4><p>建立家长信任</p></div>
-      <div class="icon-card"><div class="icon">📋</div><h4>资源匹配师</h4><p>精准推荐合适课程</p></div>
-      <div class="icon-card"><div class="icon">📈</div><h4>成长伙伴</h4><p>持续跟进孩子进步</p></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📞 课前电话的四大目的</h2>
-    <div class="step-list">
-      <div class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-content"><h4>约课</h4><p>成功安排试听课时间，这是最基本的转化节点</p></div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-content"><h4>挖需</h4><p>深入了解孩子学习现状与家长期待，找出痛点与需求</p></div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-content"><h4>建立良好的关系</h4><p>让家长感受到你的真诚与专业，为后续转化打下信任基础</p></div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">4</div>
-        <div class="step-content"><h4>添加微信 / WhatsApp</h4><p>建立私域连接，确保课后能持续触达和跟进</p></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>💬 三种提问方式</h2>
-    <div class="icon-cards">
-      <div class="icon-card"><div class="icon">🔓</div><h4>开放式提问</h4><p>"小朋友数学学习上遇到过什么困难呀？" → 获取更多信息</p></div>
-      <div class="icon-card"><div class="icon">🔒</div><h4>封闭式提问</h4><p>"小朋友现在上小一，对吗？" → 确认具体信息</p></div>
-      <div class="icon-card"><div class="icon">🎯</div><h4>选择式提问</h4><p>"您看明天下午还是晚上方便试堂？" → 引导客户做选择</p></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📋 课前首通电话流程总览</h2>
-    <div class="flow-wrap">
-      <div class="flow-node">开场白</div><div class="flow-arrow">→</div>
-      <div class="flow-node">异议处理</div><div class="flow-arrow">→</div>
-      <div class="flow-node">挖需四步</div><div class="flow-arrow">→</div>
-      <div class="flow-node">推荐试课</div><div class="flow-arrow">→</div>
-      <div class="flow-node">约课收尾</div>
-    </div>
-  </div>
-
-  <div class="quiz-card" id="quiz1-1">
-    <div class="quiz-question">📝 Q1：课前电话的首要目的是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 直接推销课程套餐</button>
-    <button class="quiz-option" data-answer="wrong">B. 告诉家长我们是最便宜的</button>
-    <button class="quiz-option" data-answer="correct">C. 约课、挖需、建立关系、添加联系方式</button>
-    <button class="quiz-option" data-answer="wrong">D. 催促家长尽快付款</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz1-2">
-    <div class="quiz-question">📝 Q2：以下哪项不是CC的核心角色？</div>
-    <button class="quiz-option" data-answer="wrong">A. 教育顾问——专业诊断学习问题</button>
-    <button class="quiz-option" data-answer="wrong">B. 信任桥梁——建立家长信任</button>
-    <button class="quiz-option" data-answer="correct">C. 价格谈判师——把课程价格压到最低</button>
-    <button class="quiz-option" data-answer="wrong">D. 资源匹配师——精准推荐合适课程</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz1-3">
-    <div class="quiz-question">📝 Q3：想获取更多信息时，应使用哪种提问方式？</div>
-    <button class="quiz-option" data-answer="wrong">A. 封闭式提问</button>
-    <button class="quiz-option" data-answer="wrong">B. 选择式提问</button>
-    <button class="quiz-option" data-answer="correct">C. 开放式提问</button>
-    <button class="quiz-option" data-answer="wrong">D. 反问式提问</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz1-4">
-    <div class="quiz-question">📝 Q4：课前电话流程的正确顺序是？</div>
-    <button class="quiz-option" data-answer="correct">A. 开场白 → 异议处理 → 挖需 → 推荐试课 → 约课收尾</button>
-    <button class="quiz-option" data-answer="wrong">B. 挖需 → 开场白 → 异议处理 → 推荐试课 → 约课收尾</button>
-    <button class="quiz-option" data-answer="wrong">C. 推荐试课 → 开场白 → 挖需 → 异议处理 → 约课收尾</button>
-    <button class="quiz-option" data-answer="wrong">D. 开场白 → 推荐试课 → 挖需 → 约课收尾 → 异议处理</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz1-5">
-    <div class="quiz-question">📝 Q5：以下哪项属于"选择式提问"？</div>
-    <button class="quiz-option" data-answer="wrong">A. "小朋友数学成绩怎么样？"</button>
-    <button class="quiz-option" data-answer="wrong">B. "小朋友是不是不喜欢数学？"</button>
-    <button class="quiz-option" data-answer="correct">C. "您看明天下午还是晚上方便试堂？"</button>
-    <button class="quiz-option" data-answer="wrong">D. "为什么想给小朋友报数学班？"</button>
-    <div class="quiz-feedback"></div>
-  </div>
-
-  <div class="nav-buttons">
-    <span></span>
-    <button class="btn btn-primary" id="nextBtn1" onclick="nextChapter(2)">下一章：开场白与异议处理 →</button>
-  </div>
-</div>
-
-<!-- ==================== CHAPTER 2 ==================== -->
-<div class="chapter" id="ch2">
-  <div class="chapter-title">第2章 开场白与异议处理</div>
-  <div class="chapter-subtitle">掌握标准开场话术，灵活应对家长五大常见拒绝理由</div>
-
-  <div class="card">
-    <h2>🗣️ 标准开场白</h2>
-    <div class="tips-box"><strong>三步法：</strong>表明身份 → 告知来电目的 → 让客户感觉有帮助</div>
-    <div class="chat-scene">
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC</div>
-          <div class="chat-bubble">您好，我是豌豆素质的课程顾问XX。之前在XX平台看到您为孩子申请了数学思维试听课，今天特地给您来电，想了解一下小朋友的情况。</div>
-        </div>
-      </div>
-      <div class="chat-msg system" style="justify-content:center;">
-        <div class="chat-bubble" style="text-align:center;">💡 <strong>关键动作：表明获取联系方式的渠道，拉近距离</strong></div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC</div>
-          <div class="chat-bubble">为了给小朋友安排一节难度合适的数学课，让小朋友有一个更好的上课体验，想跟您了解一下小朋友的情况……</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🔑 提问授权的三大目的</h2>
-    <div class="icon-cards">
-      <div class="icon-card"><div class="icon">🛡️</div><h4>增加安全感</h4><p>让家长明白你是来帮忙的，不是来推销的</p></div>
-      <div class="icon-card"><div class="icon">🤝</div><h4>增加信任度</h4><p>展示专业性和对孩子的关注</p></div>
-      <div class="icon-card"><div class="icon">🔍</div><h4>为挖需做好铺垫</h4><p>自然地过渡到挖掘需求阶段</p></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🚫 五大拒绝理由及应对话术</h2>
-    <p style="color:var(--text-secondary);margin-bottom:16px;">面对拒绝时，不要退缩——给家长一个<strong>试听的理由</strong>。记住口诀：<span class="highlight">理解 → 价值 → 引导 → 坚持，不展开</span></p>
-
-    <div class="tab-wrap">
-      <button class="tab-btn active" onclick="switchTab(this,'reason1')">没时间</button>
-      <button class="tab-btn" onclick="switchTab(this,'reason2')">小朋友不喜欢</button>
-      <button class="tab-btn" onclick="switchTab(this,'reason3')">报其他班了</button>
-      <button class="tab-btn" onclick="switchTab(this,'reason4')">没有领课/免费担心</button>
-      <button class="tab-btn" onclick="switchTab(this,'reason5')">其他理由</button>
-    </div>
-
-    <div class="tab-panel active" id="reason1">
-      <div class="chat-scene">
-        <div class="chat-msg parent">
-          <div class="chat-avatar">家</div>
-          <div class="chat-content">
-            <div class="chat-label">家长</div>
-            <div class="chat-bubble">我们最近太忙了，没时间上试听课呀……</div>
-          </div>
-        </div>
-        <div class="chat-msg cc">
-          <div class="chat-avatar">CC</div>
-          <div class="chat-content">
-            <div class="chat-label">课程顾问 · CC</div>
-            <div class="chat-bubble">特别能理解，所以才安排在线上上课，就是为了节约小朋友的时间，高效学习。课程时间只需要<span class="highlight">40分钟</span>，您看明天X点或者X点哪个时间方便？给小朋友安排个好老师。</div>
-          </div>
-        </div>
-      </div>
-      <div class="tips-box"><strong>要点：</strong>强调线上便利性 + 只需40分钟 + 二选一引导</div>
-    </div>
-
-    <div class="tab-panel" id="reason2">
-      <div class="chat-scene">
-        <div class="chat-msg parent">
-          <div class="chat-avatar">家</div>
-          <div class="chat-content">
-            <div class="chat-label">家长</div>
-            <div class="chat-bubble">我家小朋友不喜欢数学，试了也没用的……</div>
-          </div>
-        </div>
-        <div class="chat-msg cc">
-          <div class="chat-avatar">CC</div>
-          <div class="chat-content">
-            <div class="chat-label">课程顾问 · CC</div>
-            <div class="chat-bubble">可以理解，相信您之前申请试堂也是想培养下小朋友的兴趣，但这肯定需要一个过程。咱们先帮他迈开第一步，我安排一个<strong>引导性较强的老师</strong>让他先感受下，您看我们安排在明天的X点或者X点可以吧？</div>
-          </div>
-        </div>
-      </div>
-      <div class="tips-box"><strong>要点：</strong>理解家长 + 回顾初心 + 强调引导型老师 + 二选一</div>
-    </div>
-
-    <div class="tab-panel" id="reason3">
-      <div class="chat-scene">
-        <div class="chat-msg parent">
-          <div class="chat-avatar">家</div>
-          <div class="chat-content">
-            <div class="chat-label">家长</div>
-            <div class="chat-bubble">我们已经报了其他数学班了，暂时不考虑了……</div>
-          </div>
-        </div>
-        <div class="chat-msg cc">
-          <div class="chat-avatar">CC</div>
-          <div class="chat-content">
-            <div class="chat-label">课程顾问 · CC</div>
-            <div class="chat-bubble">明白！不过我们这节课是<strong>免费</strong>的，数学考试难度加大了，好的学校也需要数学竞赛成绩。我们的课程贴合校内考点的难度和要求，还有奥数方面的拓展。我们可以让小朋友试一节课，就当是检验目前的学习效果，您看明天下午还是晚上方便试堂？</div>
-          </div>
-        </div>
-      </div>
-      <div class="tips-box"><strong>要点：</strong>强调免费 + 竞赛需求 + 校内贴合 + 检验效果</div>
-    </div>
-
-    <div class="tab-panel" id="reason4">
-      <div class="chat-scene">
-        <div class="chat-msg parent">
-          <div class="chat-avatar">家</div>
-          <div class="chat-content">
-            <div class="chat-label">家长</div>
-            <div class="chat-bubble">免费的会不会质量不行啊？/ 我没领过这个课……</div>
-          </div>
-        </div>
-        <div class="chat-msg cc">
-          <div class="chat-avatar">CC</div>
-          <div class="chat-content">
-            <div class="chat-label">课程顾问 · CC</div>
-            <div class="chat-bubble">这个没关系，我们这节课<strong>不仅是一节试听课，也是一节测评课</strong>。我们的老师都是非常优秀的老师，可以对小朋友的数学水平进行一个<strong>全方位评估</strong>。您也可以正好检验一下小朋友目前的学习效果。您看帮小朋友安排在明天的X点或者X点测试一下？</div>
-          </div>
-        </div>
-      </div>
-      <div class="tips-box"><strong>要点：</strong>试听课=测评课 + 优秀老师 + 全方位评估 + 检验效果</div>
-    </div>
-
-    <div class="tab-panel" id="reason5">
-      <div class="chat-scene">
-        <div class="chat-msg parent">
-          <div class="chat-avatar">家</div>
-          <div class="chat-content">
-            <div class="chat-label">家长</div>
-            <div class="chat-bubble">我再考虑一下 / 我回去跟家人商量……</div>
-          </div>
-        </div>
-        <div class="chat-msg cc">
-          <div class="chat-avatar">CC</div>
-          <div class="chat-content">
-            <div class="chat-label">课程顾问 · CC</div>
-            <div class="chat-bubble">理解理解～不过体验一次又不花钱，试了才知道适不适合。先帮小朋友排一节课，体验完了您再和家人商量也更有依据呀！明后天哪个时间段比较方便呢？</div>
-          </div>
-        </div>
-      </div>
-      <div class="tips-box"><strong>要点：</strong>不施压 + 零成本体验 + 体验后更有依据 + 轻松引导</div>
-    </div>
-  </div>
-
-  <div class="quiz-card" id="quiz2-1">
-    <div class="quiz-question">📝 Q1：面对家长说"没时间"，最有效的应对策略是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 告诉家长"再忙也要关心孩子学习"</button>
-    <button class="quiz-option" data-answer="correct">B. 强调线上只需40分钟 + 节约时间 + 二选一引导</button>
-    <button class="quiz-option" data-answer="wrong">C. 建议家长周六日再约</button>
-    <button class="quiz-option" data-answer="wrong">D. 放弃这个家长，联系下一个</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz2-2">
-    <div class="quiz-question">📝 Q2：标准开场白的正确三步法是？</div>
-    <button class="quiz-option" data-answer="correct">A. 表明身份 → 告知来电目的 → 让客户感觉有帮助</button>
-    <button class="quiz-option" data-answer="wrong">B. 寒暄 → 报价 → 催单</button>
-    <button class="quiz-option" data-answer="wrong">C. 加微信 → 发资料 → 约时间</button>
-    <button class="quiz-option" data-answer="wrong">D. 自我介绍 → 介绍课程 → 要求付款</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz2-3">
-    <div class="quiz-question">📝 Q3：提问授权的三大目的不包括？</div>
-    <button class="quiz-option" data-answer="correct">A. 展示公司的课程价格优势</button>
-    <button class="quiz-option" data-answer="wrong">B. 增加安全感</button>
-    <button class="quiz-option" data-answer="wrong">C. 增加信任度</button>
-    <button class="quiz-option" data-answer="wrong">D. 为挖需做好铺垫</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz2-4">
-    <div class="quiz-question">📝 Q4：面对"已经报了其他班"，正确话术应强调什么？</div>
-    <button class="quiz-option" data-answer="wrong">A. 贬低竞品机构的不足</button>
-    <button class="quiz-option" data-answer="correct">B. 免费体验 + 贴合校内+竞赛需求 + 检验学习效果</button>
-    <button class="quiz-option" data-answer="wrong">C. 直接给折扣优惠</button>
-    <button class="quiz-option" data-answer="wrong">D. 告诉家长退掉原来的班</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz2-5">
-    <div class="quiz-question">📝 Q5：异议处理的核心口诀是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 反驳 → 说服 → 成交 → 收款</button>
-    <button class="quiz-option" data-answer="wrong">B. 降价 → 送课 → 再降价 → 再送课</button>
-    <button class="quiz-option" data-answer="correct">C. 理解 → 价值 → 引导 → 坚持，不展开</button>
-    <button class="quiz-option" data-answer="wrong">D. 沉默 → 倾听 → 记录 → 下次再聊</button>
-    <div class="quiz-feedback"></div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="nextChapter(1)">← 上一章</button>
-    <button class="btn btn-primary" id="nextBtn2" onclick="nextChapter(3)">下一章：挖需四步法 →</button>
-  </div>
-</div>
-
-<!-- ==================== CHAPTER 3 ==================== -->
-<div class="chapter" id="ch3">
-  <div class="chapter-title">第3章 挖需四步法</div>
-  <div class="chapter-subtitle">掌握挖掘家长真实需求的系统方法：现状→需求→痛点→解决方案</div>
-
-  <div class="card">
-    <h2>🧠 什么是挖需？</h2>
-    <div style="text-align:center;padding:20px 0;">
-      <div style="font-size:48px;margin-bottom:8px;">🎯</div>
-      <div style="font-size:20px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;">需求 = 现状 和 对未来的期待 之间的距离</div>
-      <div style="font-size:15px;color:var(--text-secondary);">
-        「有需求 → 扩大需求」&nbsp;&nbsp;|&nbsp;&nbsp;「没有需求 → 创造需求」
-      </div>
-    </div>
-    <div class="tips-box"><strong>⚠️ 重要原则：</strong>没有挖到需求之前，不要报价、不要抛优惠！</div>
-  </div>
-
-  <div class="card">
-    <h2>🎯 挖需的目的：塑造销售三性</h2>
-    <div class="icon-cards">
-      <div class="icon-card" style="border:2px solid var(--primary);"><div class="icon">📐</div><h4>必要性</h4><p>决定了数学是不是要报班学</p></div>
-      <div class="icon-card" style="border:2px solid var(--primary);"><div class="icon">🏫</div><h4>唯一性</h4><p>决定了是不是要在这里学</p></div>
-      <div class="icon-card" style="border:2px solid var(--primary);"><div class="icon">⏰</div><h4>紧迫性</h4><p>决定了是不是要现在开始学</p></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📊 挖需四步流程</h2>
-    <div class="flow-wrap" style="margin-bottom:24px;">
-      <div class="flow-node">① 基本信息确认</div><div class="flow-arrow">→</div>
-      <div class="flow-node">② 学习经历情况</div><div class="flow-arrow">→</div>
-      <div class="flow-node">③ 支付能力</div><div class="flow-arrow">→</div>
-      <div class="flow-node">④ 学习动机</div>
-    </div>
-
-    <div class="step-list">
-      <div class="step-item">
-        <div class="step-num">①</div>
-        <div class="step-content">
-          <h4>基本信息确认</h4>
-          <p>确认孩子姓名、年龄、年级（K1/K2/K3/小一/小二…），注意用轻松的语气自然过渡。</p>
-          <div class="script-tpl">"我简单和您确认一下小朋友的基本信息，小朋友的名字叫<span class="var">XX</span>对吗？今年是<span class="var">X岁</span>，上<span class="var">K3/小一</span>对吗？"</div>
-        </div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">②</div>
-        <div class="step-content">
-          <h4>学习经历和情况</h4>
-          <p>了解孩子之前是否学过数学思维、校内数学成绩如何、有没有参加竞赛。挖掘孩子的强项和薄弱点。</p>
-          <div class="script-tpl">"小朋友之前有没有上过数学相关的课程呀？""校内数学成绩怎么样？""数学方面有没有感觉特别吃力的地方？"</div>
-        </div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">③</div>
-        <div class="step-content">
-          <h4>支付能力判断</h4>
-          <p>通过了解家庭对教育投入的态度、报班预算等，判断家长的支付意愿和能力。注意：不要直接问收入！</p>
-          <div class="tips-box"><strong>技巧：</strong>通过"之前报过什么班？""读的是英文还是中文校？"等间接问题判断</div>
-        </div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">④</div>
-        <div class="step-content">
-          <h4>学习动机挖掘</h4>
-          <p>了解家长想让小朋友学数学的深层动机，是否有明确目标（升学/竞赛/培养思维）。<strong>这一步直接为后续关单做铺垫！</strong></p>
-          <div class="script-tpl">"您觉得小朋友学数学主要是为了什么呢？是学校考试需要，还是想培养一下思维能力？""有没有考虑过以后参加数学竞赛？"</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>💡 挖需关键技巧</h2>
-    <div class="icon-cards">
-      <div class="icon-card"><div class="icon">👂</div><h4>多听少说</h4><p>让家长说70%，你说30%</p></div>
-      <div class="icon-card"><div class="icon">🔓</div><h4>多用开放式提问</h4><p>获取更多信息，不引导答案</p></div>
-      <div class="icon-card"><div class="icon">📝</div><h4>记录关键信息</h4><p>为后续个性化推荐做准备</p></div>
-      <div class="icon-card"><div class="icon">💰</div><h4>先挖需再报价</h4><p>没挖到需求绝不报价</p></div>
-    </div>
-  </div>
-
-  <div class="quiz-card" id="quiz3-1">
-    <div class="quiz-question">📝 Q1：挖需四步的正确顺序是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 支付能力 → 基本信息 → 学习动机 → 学习经历</button>
-    <button class="quiz-option" data-answer="correct">B. 基本信息 → 学习经历 → 支付能力 → 学习动机</button>
-    <button class="quiz-option" data-answer="wrong">C. 学习动机 → 基本信息 → 支付能力 → 学习经历</button>
-    <button class="quiz-option" data-answer="wrong">D. 学习经历 → 支付能力 → 学习动机 → 基本信息</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz3-2">
-    <div class="quiz-question">📝 Q2：以下哪项对"需求"的定义最准确？</div>
-    <button class="quiz-option" data-answer="wrong">A. 客户想买的东西</button>
-    <button class="quiz-option" data-answer="correct">B. 现状和未来期待之间的距离</button>
-    <button class="quiz-option" data-answer="wrong">C. 家长能接受的最高价格</button>
-    <button class="quiz-option" data-answer="wrong">D. 小朋友最喜欢的学科</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz3-3">
-    <div class="quiz-question">📝 Q3：挖需的目的——塑造"销售三性"不包括？</div>
-    <button class="quiz-option" data-answer="correct">A. 便宜性——证明我们的课程最便宜</button>
-    <button class="quiz-option" data-answer="wrong">B. 必要性——数学是不是要报班学</button>
-    <button class="quiz-option" data-answer="wrong">C. 唯一性——是不是要在这里学</button>
-    <button class="quiz-option" data-answer="wrong">D. 紧迫性——是不是要现在开始学</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz3-4">
-    <div class="quiz-question">📝 Q4：挖需阶段最重要的原则是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 多说少听，展示专业性</button>
-    <button class="quiz-option" data-answer="wrong">B. 尽快报价，抢占先机</button>
-    <button class="quiz-option" data-answer="correct">C. 没有挖到需求之前，不要报价抛优惠</button>
-    <button class="quiz-option" data-answer="wrong">D. 跳过支付能力判断，直接问学习动机</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz3-5">
-    <div class="quiz-question">📝 Q5：判断家长支付能力时，正确的做法是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 直接问"你们家庭月收入多少？"</button>
-    <button class="quiz-option" data-answer="correct">B. 通过"之前报过什么班？""读的是英文还是中文校？"间接了解</button>
-    <button class="quiz-option" data-answer="wrong">C. 查看家长的微信朋友圈判断</button>
-    <button class="quiz-option" data-answer="wrong">D. 不需要判断，直接推荐最贵的套餐</button>
-    <div class="quiz-feedback"></div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="nextChapter(2)">← 上一章</button>
-    <button class="btn btn-primary" id="nextBtn3" onclick="nextChapter(4)">下一章：试听课推荐与定级 →</button>
-  </div>
-</div>
-
-<!-- ==================== CHAPTER 4 ==================== -->
-<div class="chapter" id="ch4">
-  <div class="chapter-title">第4章 试听课推荐与定级</div>
-  <div class="chapter-subtitle">根据挖需结果，精准匹配合适难度和课件，让试听课一次命中</div>
-
-  <div class="card">
-    <h2>📊 九阶试听课课件总览</h2>
-    <p style="color:var(--text-secondary);margin-bottom:16px;">根据孩子的年龄和数学基础，从 S1~S8 级别中精确匹配最合适的试听课。✅ = 已有粤语/英语版本</p>
-    <div style="overflow-x:auto;">
-      <table class="data-table">
-        <thead>
-          <tr><th class="phase-header" colspan="2">阶段</th><th class="phase-header" colspan="4">S1阶段</th><th class="phase-header" colspan="3">S2阶段</th><th class="phase-header" colspan="2">S3阶段</th><th class="phase-header" colspan="2">S4阶段</th></tr>
-          <tr><th>语言</th><th>类型</th><th>乐迪的一天</th><th>光影魔术师</th><th>海底派对</th><th>最棒的演出</th><th>欢乐舞会</th><th>欢乐博物馆</th><th>皮皮虎的礼物</th><th>新智闯悬浮岛</th><th>魔法集市奇遇</th><th>魔法水源</th><th>逃离暴风雨</th></tr>
-        </thead>
-        <tbody>
-          <tr><td rowspan="3"><strong>粤语</strong></td><td>字体</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td>提示音</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td>动画</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td rowspan="3"><strong>英语</strong></td><td>字体</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td>提示音</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td>动画</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📊 九阶试听课课件总览（续）</h2>
-    <div style="overflow-x:auto;">
-      <table class="data-table">
-        <thead>
-          <tr><th class="phase-header" colspan="2">阶段</th><th class="phase-header" colspan="2">S5阶段</th><th class="phase-header" colspan="2">S6阶段</th><th class="phase-header" colspan="2">S7阶段</th><th class="phase-header" colspan="2">S8阶段</th></tr>
-          <tr><th>语言</th><th>类型</th><th>超时空任务</th><th>厨神挑战赛</th><th>世纪末大侦探</th><th>寻找芳香草</th><th>世纪末大侦探</th><th>决战金杯星</th><th>思维謎題摩天大楼</th><th>图形奥秘探究</th></tr>
-        </thead>
-        <tbody>
-          <tr><td rowspan="3"><strong>粤语</strong></td><td>字体</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td>提示音</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td>动画</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td rowspan="3"><strong>英语</strong></td><td>字体</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td></tr>
-          <tr><td>提示音</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td><td class="check">-</td><td>✗</td></tr>
-          <tr><td>动画</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🔄 试听课定级决策流程</h2>
-    <div style="text-align:center;padding:12px;">
-      <div class="flow-wrap" style="flex-direction:column;gap:8px;">
-        <div class="flow-node" style="background:#FEF2F2;border-color:#DC2626;">确认年龄 & 年级</div>
-        <div class="flow-arrow" style="transform:rotate(90deg);">→</div>
-        <div class="flow-node" style="background:#FFFBEB;border-color:#D97706;">判断数学基础（校内成绩/有无培训经历）</div>
-        <div class="flow-arrow" style="transform:rotate(90deg);">→</div>
-        <div class="flow-node" style="background:#ECFDF5;border-color:#059669;">匹配对应阶段（S1~S8）</div>
-        <div class="flow-arrow" style="transform:rotate(90deg);">→</div>
-        <div class="flow-node" style="background:#EEF2FF;border-color:#4F46E5;">选择语言版本（粤语/英语）</div>
-        <div class="flow-arrow" style="transform:rotate(90deg);">→</div>
-        <div class="flow-node" style="background:var(--primary);color:white;border-color:var(--primary-dark);">确认并推荐试听课</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🗣️ 确认难度和时间的话术</h2>
-    <div class="chat-scene">
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC</div>
-          <div class="chat-bubble">根据刚才了解到的情况，小朋友目前在<span class="highlight">XX年级</span>，数学基础<span class="highlight">XX</span>，我帮小朋友安排的是<span class="highlight">SX阶段</span>的试听课，课程主题是《<span class="highlight">XX</span>》。这节课主要帮助小朋友解决<span class="highlight">XX</span>问题，非常适合小朋友目前的情况。</div>
-        </div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC</div>
-          <div class="chat-bubble">试堂时间安排在明天<span class="highlight">XX点</span>，您看这个时间方便吗？</div>
-        </div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC · 💉 打预防针</div>
-          <div class="chat-bubble">💡 温馨提醒一下：试听课是第一次上课，小朋友可能会有些不适应或者反应偏慢，这是<span class="highlight">非常正常的</span>。我们的老师非常有经验，会根据小朋友的课堂表现灵活调整节奏。所以课堂上家长不用太紧张，也<span class="highlight">尽量不要在旁边替小朋友回答问题</span>，让小朋友自己尝试、自己表达，这样老师才能更准确地判断小朋友的真实水平，后续也能给出更精准的学习建议。</div>
-        </div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC · 👨‍👩‍👧 确认陪同人</div>
-          <div class="chat-bubble">另外想确认一下，上课当天是<span class="highlight">哪位家长</span>陪小朋友一起上课呢？是爸爸、妈妈，还是家里的其他长辈？方便我们老师提前了解情况，上课时也会更有针对性地和家长沟通～</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="quiz-card" id="quiz4-1">
-    <div class="quiz-question">📝 Q1：推荐试听课等级的核心依据是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 家长的收入水平</button>
-    <button class="quiz-option" data-answer="wrong">B. 随机分配一个级别</button>
-    <button class="quiz-option" data-answer="correct">C. 孩子的年龄、年级和数学基础综合判断</button>
-    <button class="quiz-option" data-answer="wrong">D. 家长自己选择喜欢哪个主题</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz4-2">
-    <div class="quiz-question">📝 Q2：九阶课件体系中，S1阶段属于什么段？</div>
-    <button class="quiz-option" data-answer="wrong">A. 基础段</button>
-    <button class="quiz-option" data-answer="correct">B. 启蒙段</button>
-    <button class="quiz-option" data-answer="wrong">C. 进阶段</button>
-    <button class="quiz-option" data-answer="wrong">D. 高阶段</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz4-3">
-    <div class="quiz-question">📝 Q3：粤语版课件在S1启蒙段已支持的主题包括？</div>
-    <button class="quiz-option" data-answer="wrong">A. 乐迪的一天</button>
-    <button class="quiz-option" data-answer="correct">B. 最棒的演出</button>
-    <button class="quiz-option" data-answer="wrong">C. 海底派对</button>
-    <button class="quiz-option" data-answer="wrong">D. 光影魔术师</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz4-4">
-    <div class="quiz-question">📝 Q4：定级决策流程中，第二步是什么？</div>
-    <button class="quiz-option" data-answer="wrong">A. 选择语言版本（粤语/英语）</button>
-    <button class="quiz-option" data-answer="correct">B. 判断数学基础（校内成绩/有无培训经历）</button>
-    <button class="quiz-option" data-answer="wrong">C. 确认并推荐试听课</button>
-    <button class="quiz-option" data-answer="wrong">D. 匹配对应阶段（S1~S8）</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz4-5">
-    <div class="quiz-question">📝 Q5：在确认上课难度和时间时，打预防针的主要目的是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 让家长提前准备好上课设备和课件</button>
-    <button class="quiz-option" data-answer="correct">B. 告知家长首课小朋友可能不适应属正常现象，不要替答，让老师准确判断水平</button>
-    <button class="quiz-option" data-answer="wrong">C. 提醒家长课程价格较高，做好心理准备</button>
-    <button class="quiz-option" data-answer="wrong">D. 让家长提前教会小朋友上课内容</button>
-    <div class="quiz-feedback"></div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="nextChapter(3)">← 上一章</button>
-    <button class="btn btn-primary" id="nextBtn4" onclick="nextChapter(5)">下一章：电话收尾与WS跟进 →</button>
-  </div>
-</div>
-
-<!-- ==================== CHAPTER 5 ==================== -->
-<div class="chapter" id="ch5">
-  <div class="chapter-title">第5章 电话收尾与WS跟进</div>
-  <div class="chapter-subtitle">挂机前做好三确认，挂机后发送三件套，确保试听课万无一失</div>
-
-  <div class="card">
-    <h2>📞 挂机前 — 三个关键确认</h2>
-    <div class="tips-box"><strong>时机：</strong>在确认完上课难度和时间后、礼貌挂机之前，必须完成以下三项确认</div>
-    <div class="step-list">
-      <div class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>确认上课设备 <span class="badge badge-primary">电脑/iPad/手机</span></h4>
-          <p>询问家长上课使用什么设备（电脑、iPad还是手机），确认是否已下载APP。如未下载，指引家长提前安装，确保上课当天设备就绪。</p>
-        </div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>确认添加好 WhatsApp <span class="badge badge-warning">私域连接</span></h4>
-          <p>确认家长已添加CC的WhatsApp/微信为好友，建立私域触达通道。这是后续发送资料、跟进提醒、课后沟通的基础。</p>
-        </div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>试探报课意向 <span class="badge badge-success">关键铺垫</span></h4>
-          <p>在确认设备后顺势试探家长报课态度："小朋友试听完如果喜欢的话，后续报课方面您是怎么考虑的呢？" 提前感知家长的预算和意向，为后续关单做准备。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>💬 挂机前对话示例</h2>
-    <div class="chat-scene">
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC · 🔌 确认设备</div>
-          <div class="chat-bubble">另外想确认一下，小朋友上课是用<span class="highlight">电脑、iPad还是手机</span>呢？如果还没有下载APP的话，我稍后把下载链接发到您的WhatsApp上，您可以提前装好试试~</div>
-        </div>
-      </div>
-      <div class="chat-msg parent">
-        <div class="chat-avatar">家</div>
-        <div class="chat-content">
-          <div class="chat-label">家长</div>
-          <div class="chat-bubble">用iPad，还没下载APP呢。</div>
-        </div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC · 📲 确认WhatsApp</div>
-          <div class="chat-bubble">好的，iPad在应用商店搜索"豌豆素质学生端"就可以下载。对了，我刚加了您的<span class="highlight">WhatsApp</span>，您通过一下好友请求，我马上把所有资料发给您~</div>
-        </div>
-      </div>
-      <div class="chat-msg parent">
-        <div class="chat-avatar">家</div>
-        <div class="chat-content">
-          <div class="chat-label">家长</div>
-          <div class="chat-bubble">好的，通过了。</div>
-        </div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC · 🎯 试探报课意向</div>
-          <div class="chat-bubble">太好了！还有一个事儿想提前问问您：<span class="highlight">小朋友试听完如果喜欢的话，后续报课方面您是怎么考虑的呢？</span> 这样我也可以提前帮您留意一下合适的阶段和老师。</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>☎️ 电话结束语</h2>
-    <div class="tips-box"><strong>目的：</strong>再次介绍自己加深印象，告知后续动作，礼貌挂机</div>
-    <div class="chat-scene">
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课程顾问 · CC</div>
-          <div class="chat-bubble">好的，那我们就定在明天下午2点半，我已经帮小朋友安排好老师了。稍后我会通过<span class="highlight">WhatsApp</span>把试听课的详细信息发给您，包括APP下载链接、课程内容介绍和约课提醒。如果有什么问题随时联系我，我是课程顾问<span class="highlight">XX</span>~</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📤 挂机后 — 必发三件套</h2>
-    <div class="tips-box"><strong>挂机后立即通过 WhatsApp/微信发送以下三样内容</strong></div>
-    <ul class="checklist" id="checklist-ch5">
-      <li>
-        <span class="check-icon" onclick="toggleCheck(this)"></span>
-        <div><strong>发送APP下载方式</strong><br><span style="font-size:13px;color:var(--text-secondary);">电脑端：https://siwei.hltn.com/download；手机/iPad：应用商店搜索"豌豆素质学生端"</span></div>
-      </li>
-      <li>
-        <span class="check-icon" onclick="toggleCheck(this)"></span>
-        <div><strong>发送试听内容介绍</strong><br><span style="font-size:13px;color:var(--text-secondary);">根据小朋友年龄和基础，发送对应级别的课件主题和内容简介，让家长提前了解上课内容</span></div>
-      </li>
-      <li>
-        <span class="check-icon" onclick="toggleCheck(this)"></span>
-        <div><strong>发送约课提醒</strong><br><span style="font-size:13px;color:var(--text-secondary);">包含时间、账号、主题、内容，提醒提前下载APP准时上课</span></div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>📱 APP下载指引</h2>
-    <div class="icon-cards">
-      <div class="icon-card">
-        <div class="icon">💻</div>
-        <h4>电脑客户端</h4>
-        <p style="word-break:break-all;font-size:13px;">https://siwei.hltn.com/download<br>选择对应电脑系统下载"豌豆素质学生端"</p>
-      </div>
-      <div class="icon-card">
-        <div class="icon">📱</div>
-        <h4>手机 / iPad</h4>
-        <p style="font-size:13px;">在应用商店搜索<br>"豌豆素质学生端"<br>下载即可</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📝 约课提醒模板</h2>
-    <div class="script-tpl"><span class="var">XX妈妈</span>您好，小朋友的课程已经安排好了🎉
-
-试堂时间：<span class="var">明天 9月11日 20:30</span>
-试堂账号：<span class="var">xxxxxxxxxxxx</span>
-课程主题：<span class="var">《皮皮虎的礼物》</span>
-课程内容：<span class="var">这堂课主要引导小朋友解决行列定位问题。本课有利于小朋友体验空间位置之间的关系，并推理出行列元素组合后的图案，为之后学习数形格阵、数独推理等问题奠定基础。</span>
-
-您记得帮小朋友预留时间，提前下载APP，准时上堂哦~~ 😊</div>
-  </div>
-
-  <div class="quiz-card" id="quiz5-1">
-    <div class="quiz-question">📝 Q1：挂机前"三个关键确认"不包括哪项？</div>
-    <button class="quiz-option" data-answer="wrong">A. 确认上课设备（电脑/iPad/手机）</button>
-    <button class="quiz-option" data-answer="wrong">B. 确认添加好 WhatsApp</button>
-    <button class="quiz-option" data-answer="correct">C. 确认课程价格和优惠信息</button>
-    <button class="quiz-option" data-answer="wrong">D. 试探报课意向</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz5-2">
-    <div class="quiz-question">📝 Q2：试探报课意向的话术范例是？</div>
-    <button class="quiz-option" data-answer="wrong">A. "我们这个课程价格很优惠，现在报名最划算"</button>
-    <button class="quiz-option" data-answer="correct">B. "小朋友试听完如果喜欢，后续报课方面您怎么考虑？"</button>
-    <button class="quiz-option" data-answer="wrong">C. "您家里经济条件怎么样？能负担得起吗？"</button>
-    <button class="quiz-option" data-answer="wrong">D. "不报名也没关系，先试试看"</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz5-3">
-    <div class="quiz-question">📝 Q3：挂机后通过 WhatsApp 必发的"三件套"是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 价格表、套餐介绍、优惠活动</button>
-    <button class="quiz-option" data-answer="wrong">B. 老师简历、公司介绍、合同模板</button>
-    <button class="quiz-option" data-answer="correct">C. APP下载方式、试听内容介绍、约课提醒</button>
-    <button class="quiz-option" data-answer="wrong">D. 课后作业、考试大纲、家长须知</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz5-4">
-    <div class="quiz-question">📝 Q4：确认上课设备的主要目的是？</div>
-    <button class="quiz-option" data-answer="correct">A. 确保家长提前下载APP，避免上课当天因设备问题影响出勤</button>
-    <button class="quiz-option" data-answer="wrong">B. 推销公司推荐的设备品牌</button>
-    <button class="quiz-option" data-answer="wrong">C. 判断家长的经济实力</button>
-    <button class="quiz-option" data-answer="wrong">D. 统计设备型号做市场调研</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz5-5">
-    <div class="quiz-question">📝 Q5：为什么要在挂机前确认 WhatsApp 是否已添加？</div>
-    <button class="quiz-option" data-answer="wrong">A. 为了多一个好友数量</button>
-    <button class="quiz-option" data-answer="correct">B. 建立私域触达通道，确保课后能发送资料和持续跟进</button>
-    <button class="quiz-option" data-answer="wrong">C. 方便给家长发广告</button>
-    <button class="quiz-option" data-answer="wrong">D. 公司要求必须完成的好友KPI</button>
-    <div class="quiz-feedback"></div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="nextChapter(4)">← 上一章</button>
-    <button class="btn btn-primary" id="nextBtn5" onclick="nextChapter(6)">下一章：跟课流程 →</button>
-  </div>
-</div>
-
-<!-- ==================== CHAPTER 6 ==================== -->
-<div class="chapter" id="ch6">
-  <div class="chapter-title">第6章 跟课流程</div>
-  <div class="chapter-subtitle">试听课当天的课前提醒与课中观察，确保出勤率和课堂体验</div>
-
-  <div class="card">
-    <h2>📋 跟课流程总览</h2>
-    <div class="flow-wrap" style="margin-bottom:20px;">
-      <div class="flow-node" style="background:#FEF2F2;border-color:#DC2626;">课前2小时<br>提醒</div><div class="flow-arrow">→</div>
-      <div class="flow-node" style="background:#FFFBEB;border-color:#D97706;">课前30分钟<br>提醒</div><div class="flow-arrow">→</div>
-      <div class="flow-node" style="background:#ECFDF5;border-color:#059669;">课前5分钟<br>提醒</div><div class="flow-arrow">→</div>
-      <div class="flow-node" style="background:#EEF2FF;border-color:#4F46E5;">课中观察</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>⏰ 课前提醒 - 三个关键节点</h2>
-
-    <div class="step-list">
-      <div class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>课前2小时提醒 <span class="badge badge-primary">第一次触达</span></h4>
-          <p>通过WS/微信发送提醒消息，包含：上课时间、APP下载链接、课程主题、上课账号。确认家长已收到并知晓。如果家长未回复，可电话跟进确认。</p>
-        </div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>课前30分钟提醒 <span class="badge badge-warning">第二次触达</span></h4>
-          <p>再次提醒家长即将上课，确认设备和网络是否正常。建议家长提前5分钟进入教室等待。如发现异常（设备问题、网络问题），及时协助解决。</p>
-        </div>
-      </div>
-      <div class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>课前5分钟提醒 <span class="badge badge-success">最后确认</span></h4>
-          <p>最后确认家长和孩子已准备好进入教室。查看后台是否显示在线，如未上线立即电话联系。确保准时出席率。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>👀 课中观察</h2>
-
-    <div class="step-list">
-      <div class="step-item">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h4>课中观察要点 <span class="badge badge-primary">上课期间</span></h4>
-          <p>关注课堂互动情况：孩子是否积极参与、与老师的互动质量、家长是否在旁观看。记录关键亮点和问题点，截图课堂精彩瞬间。</p>
-          <ul style="margin-top:8px;padding-left:18px;color:var(--text-secondary);">
-            <li>孩子参与度：是否主动回答问题、是否投入课堂游戏</li>
-            <li>师生互动：老师引导是否到位、孩子是否理解指令</li>
-            <li>家长状态：是否在旁观看、是否有互动或提问</li>
-            <li>技术问题：是否有卡顿、掉线、声音画面异常</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>💡 提醒话术模板</h2>
-    <div class="chat-scene">
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课前2小时 · WS提醒</div>
-          <div class="chat-bubble">家长您好~温馨提示：小朋友<span class="highlight">XX的试听课</span>将在今天<span class="highlight">XX:XX</span>开始，课程主题是《<span class="highlight">XX</span>》。如还未下载APP，请点击链接下载：<span class="highlight">https://siwei.hltn.com/download</span>。上课账号：<span class="highlight">XXXXXX</span>。收到请回复，谢谢！😊</div>
-        </div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课前30分钟 · WS提醒</div>
-          <div class="chat-bubble">家长您好，还有30分钟就要上课啦~请您确认设备和网络正常，提前5分钟进入教室准备哦。如有任何问题随时联系我！</div>
-        </div>
-      </div>
-      <div class="chat-msg cc">
-        <div class="chat-avatar">CC</div>
-        <div class="chat-content">
-          <div class="chat-label">课前5分钟 · WS提醒</div>
-          <div class="chat-bubble">家长您好，马上要开始啦~请点击进入教室，老师在等小朋友了哦！🎉</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="quiz-card" id="quiz6-1">
-    <div class="quiz-question">📝 Q1：课前提醒包含几个关键时间节点？</div>
-    <button class="quiz-option" data-answer="correct">A. 3个——课前2小时、课前30分钟、课前5分钟</button>
-    <button class="quiz-option" data-answer="wrong">B. 2个——课前1小时、课前5分钟</button>
-    <button class="quiz-option" data-answer="wrong">C. 1个——课前30分钟</button>
-    <button class="quiz-option" data-answer="wrong">D. 4个——课前1天、课前2小时、课前30分钟、课前5分钟</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz6-2">
-    <div class="quiz-question">📝 Q2：课前2小时提醒消息中不需要包含什么？</div>
-    <button class="quiz-option" data-answer="correct">A. 课程价格表</button>
-    <button class="quiz-option" data-answer="wrong">B. 上课时间</button>
-    <button class="quiz-option" data-answer="wrong">C. APP下载链接</button>
-    <button class="quiz-option" data-answer="wrong">D. 上课账号和课程主题</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz6-3">
-    <div class="quiz-question">📝 Q3：课前5分钟家长仍未上线，应该怎么做？</div>
-    <button class="quiz-option" data-answer="wrong">A. 发条消息就等着</button>
-    <button class="quiz-option" data-answer="correct">B. 查看后台在线状态，未上线立即电话联系</button>
-    <button class="quiz-option" data-answer="wrong">C. 直接取消本次课程</button>
-    <button class="quiz-option" data-answer="wrong">D. 不用管，等家长自己上线</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz6-4">
-    <div class="quiz-question">📝 Q4：课中观察时应重点关注什么？</div>
-    <button class="quiz-option" data-answer="wrong">A. 老师的穿着打扮</button>
-    <button class="quiz-option" data-answer="wrong">B. 课程平台的UI设计</button>
-    <button class="quiz-option" data-answer="correct">C. 孩子参与度、师生互动质量、家长是否旁听</button>
-    <button class="quiz-option" data-answer="wrong">D. 教室的灯光和背景布置</button>
-    <div class="quiz-feedback"></div>
-  </div>
-  <div class="quiz-card" id="quiz6-5">
-    <div class="quiz-question">📝 Q5：课前30分钟提醒的主要目的是？</div>
-    <button class="quiz-option" data-answer="wrong">A. 催促家长付款</button>
-    <button class="quiz-option" data-answer="wrong">B. 介绍课程套餐详情</button>
-    <button class="quiz-option" data-answer="correct">C. 确认设备和网络正常，提醒及时进入教室</button>
-    <button class="quiz-option" data-answer="wrong">D. 发送课后作业</button>
-    <div class="quiz-feedback"></div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="nextChapter(5)">← 上一章</button>
-    <button class="btn btn-primary" id="nextBtn6" onclick="showAI()">🎯 完成学习，进入AI模拟对话 →</button>
-  </div>
-</div>
-
-<!-- ==================== AI DIALOGUE ==================== -->
-<div class="chapter" id="ai-section">
-  <div class="chapter-title">🎭 AI模拟对话练习</div>
-  <div class="chapter-subtitle">选择一个场景，模拟真实CC与家长对话，练习你的话术应对能力</div>
-
-  <div class="card">
-    <h2>请选择练习场景</h2>
-    <div class="ai-chat-wrap" id="ai-chat">
-      <div class="ai-chat-header">🤖 CC实战对话模拟器</div>
-      <div class="ai-chat-body" id="ai-chat-body">
-        <div class="chat-msg system" style="justify-content:center;">
-          <div class="chat-bubble" style="text-align:center;">👋 请从下方选择一个练习场景开始</div>
-        </div>
-      </div>
-      <div class="ai-chat-input-area">
-        <select id="ai-scene" onchange="startAIScene()">
-          <option value="">-- 选择场景 --</option>
-          <option value="1">场景一：开场白 + 提问授权</option>
-          <option value="2">场景二：家长说"没时间"</option>
-          <option value="3">场景三：家长说"报了其他班"</option>
-          <option value="4">场景四：挖需 - 了解学习情况</option>
-          <option value="5">场景五：确认难度 + 打预防针 + 确认陪同人</option>
-          <option value="6">场景六：跟课提醒与课中跟进</option>
-        </select>
-        <button class="btn btn-primary" onclick="startAIScene()">开始</button>
-      </div>
-      <div id="ai-options" style="display:none;"></div>
-    </div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="nextChapter(6)">← 回到第6章</button>
-    <button class="btn btn-success btn-lg" onclick="showFinal()">🏆 进入终极考核</button>
-  </div>
-</div>
-
-<!-- ==================== FINAL EXAM ==================== -->
-<div class="chapter" id="final-exam">
-  <div class="chapter-title">🏆 终极综合考核</div>
-  <div class="chapter-subtitle">10道综合题，检验你对CC课前课中SOP的掌握程度。80分及以上可获得结业证书。</div>
-
-  <div class="card">
-    <h2>考核说明</h2>
-    <p>共10题，每题10分。题目涵盖：CC角色、开场白、异议处理、挖需、试听课推荐、课前准备、跟课跟进。</p>
-    <p style="color:var(--primary);font-weight:600;">总分 ≥ 80分即可获得结业证书 🎓</p>
-  </div>
-
-  <div id="final-questions"></div>
-
-  <div class="card" style="text-align:center;" id="exam-submit-area">
-    <button class="btn btn-success btn-lg" onclick="submitFinalExam()">📝 提交考核</button>
-  </div>
-
-  <div class="score-display" id="exam-score" style="display:none;">
-    <div class="score-num" id="score-num">0</div>
-    <div class="score-label">/ 100 分</div>
-    <p id="score-msg" style="margin-top:12px;font-size:16px;"></p>
-    <button class="btn btn-primary btn-lg" style="margin-top:16px;display:none;" id="retry-exam-btn" onclick="retryFinalExam()">🔄 重新考核（第1次重做）</button>
-    <button class="btn btn-primary btn-lg" style="margin-top:16px;display:none;" id="cert-btn" onclick="showCertificate()">🎓 领取结业证书</button>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="showAI()">← 回到AI模拟</button>
-    <span></span>
-  </div>
-</div>
-
-</div><!-- /main-content -->
-
-<!-- ==================== CERTIFICATE OVERLAY ==================== -->
-<div class="certificate-overlay" id="cert-overlay">
-  <div class="certificate">
-    <div class="cert-title">🎓 结 业 证 书</div>
-    <div class="cert-subtitle">CERTIFICATE OF COMPLETION</div>
-    <div class="cert-name" id="cert-student">优秀学员</div>
+<div class="mobile-progress-bar"><div class="mpb-fill" id="mpbFill"></div></div>
+<main class="main" id="mainContent"></main>
+
+<div class="cert-overlay" id="certOverlay">
+  <div class="certificate-paper" id="certPaper">
+    <div class="cert-title">🏆 结业证书</div>
+    <div class="cert-sub">CERTIFICATE OF COMPLETION</div>
     <div class="cert-body">
-      已圆满完成<br>
-      <strong>「CC课前课中SOP - 海外港澳版」</strong><br>
-      全部课程学习并通过终极考核<br>
-      掌握了从开场白到跟课的完整试听课服务流程
+      <p>兹证明</p>
+      <p><span class="cert-name" id="certStudentName" contenteditable="true">请填写姓名</span></p>
+      <p>已完成</p>
+      <p class="cert-course">CC课前课中SOP · 海外港澳版</p>
+      <p>全部课程内容并通过考核</p>
+      <div class="cert-score" id="certScore">综合评定：通过</div>
+      <div class="cert-final-score" id="certFinalScore">终极考核得分：—</div>
     </div>
-    <div class="cert-date" id="cert-date"></div>
-    <div class="cert-seal">🏅</div>
-    <button class="btn btn-primary" onclick="closeCertificate()">关闭证书</button>
+    <div class="cert-footer"><span id="certDate"></span><span>VIPTHINK</span></div>
+    <div class="cert-actions">
+      <button class="btn" onclick="printCertificate()">🖨️ 打印证书</button>
+      <button class="btn btn-outline" onclick="closeCertificate()">关闭</button>
+    </div>
   </div>
+</div>
+
+<button class="notes-toggle" onclick="toggleNotes()">📝</button>
+<div class="notes-panel" id="notesPanel">
+  <h3>📝 学习笔记 — <span id="notesChapterLabel" style="font-weight:400;font-size:13px;color:var(--text-secondary);"></span></h3>
+  <textarea id="notesTextarea" placeholder="在这里记录你的学习心得..."></textarea>
+  <button class="btn btn-outline" onclick="toggleNotes()" style="margin-top:12px;width:100%;">关闭</button>
 </div>
 
 <script>
-// ==================== NAVIGATION ====================
-const totalChapters = 6;
-let currentChapter = 1;
-let completedChapters = new Set();
-let quizScores = {};
+// ============================================================
+// 课程数据
+// ============================================================
+const courseData = { title: 'CC课前课中SOP · 海外港澳版', sections: [
+  { id:'s1', title:'CC角色与课前准备', duration:'8-10分钟', icon:'1', type:'content_quiz', quizId:'quiz1', content:`<div class="section-header"><span class="section-badge">第1章</span><h1>CC角色认知与课前准备</h1><p class="duration">⏱ 学习时长：8-10分钟 | 📝 含5道测验题</p></div><div class="card"><h2>🎯 CC角色定位</h2><p>CC（Course Consultant / 课程顾问）是连接<strong>家长</strong>与<strong>优质课程</strong>的桥梁。你的核心任务不是"卖课"，而是帮助家长发现孩子的学习需求，并提供合适的解决方案。</p><div class="strategy-grid"><div class="strategy-card"><div class="icon">🎓</div><h4>教育顾问</h4><p>专业诊断学习问题</p></div><div class="strategy-card"><div class="icon">🤝</div><h4>信任桥梁</h4><p>建立家长信任</p></div><div class="strategy-card"><div class="icon">📋</div><h4>资源匹配师</h4><p>精准推荐合适课程</p></div><div class="strategy-card"><div class="icon">📈</div><h4>成长伙伴</h4><p>持续跟进孩子进步</p></div></div></div><div class="card"><h2>📞 课前电话的四大目的</h2><div class="step-list"><div class="step-item"><div class="step-num-big">1</div><div class="step-content"><h4>约课</h4><p>成功安排试听课时间，这是最基本的转化节点</p></div></div><div class="step-item"><div class="step-num-big">2</div><div class="step-content"><h4>挖需</h4><p>深入了解孩子学习现状与家长期待，找出痛点与需求</p></div></div><div class="step-item"><div class="step-num-big">3</div><div class="step-content"><h4>建立良好的关系</h4><p>让家长感受到你的真诚与专业，为后续转化打下信任基础</p></div></div><div class="step-item"><div class="step-num-big">4</div><div class="step-content"><h4>添加微信 / WhatsApp</h4><p>建立私域连接，确保课后能持续触达和跟进</p></div></div></div></div><div class="card"><h2>💬 三种提问方式</h2><div class="strategy-grid"><div class="strategy-card"><div class="icon">🔓</div><h4>开放式提问</h4><p>"小朋友数学学习上遇到过什么困难呀？" → 获取更多信息</p></div><div class="strategy-card"><div class="icon">🔒</div><h4>封闭式提问</h4><p>"小朋友现在上小一，对吗？" → 确认具体信息</p></div><div class="strategy-card"><div class="icon">🎯</div><h4>选择式提问</h4><p>"您看明天下午还是晚上方便试堂？" → 引导客户做选择</p></div></div></div><div class="card"><h2>📋 课前首通电话流程总览</h2><div class="flow-steps"><div class="flow-step"><div class="step-num">1</div><h4>开场白</h4><p>表明身份+来电目的</p></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">2</div><h4>异议处理</h4><p>化解家长顾虑</p></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">3</div><h4>挖需四步</h4><p>深入挖掘需求</p></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">4</div><h4>推荐试课</h4><p>匹配合适等级</p></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">5</div><h4>约课收尾</h4><p>确认+发送资料</p></div></div></div>` },
+  { id:'s2', title:'开场白与异议处理', duration:'10-12分钟', icon:'2', type:'content_quiz', quizId:'quiz2', content:`<div class="section-header"><span class="section-badge">第2章</span><h1>开场白与异议处理</h1><p class="duration">⏱ 学习时长：10-12分钟 | 📝 含5道测验题</p></div><div class="card"><h2>🗣️ 标准开场白</h2><div class="highlight-box"><strong>三步法：</strong>表明身份 → 告知来电目的 → 让客户感觉有帮助</div><div class="chat-scene"><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">您好，我是豌豆素质的课程顾问XX。之前在XX平台看到您为孩子申请了数学思维试听课，今天特地给您来电，想了解一下小朋友的情况。</div></div></div><div class="chat-msg system" style="justify-content:center"><div class="chat-bubble">💡 关键动作：表明获取联系方式的渠道，拉近距离</div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">为了给小朋友安排一节难度合适的数学课，让小朋友有一个更好的上课体验，想跟您了解一下小朋友的情况……</div></div></div></div></div><div class="card"><h2>🔑 提问授权的三大目的</h2><div class="strategy-grid"><div class="strategy-card"><div class="icon">🛡️</div><h4>增加安全感</h4><p>让家长明白你是来帮忙的，不是来推销的</p></div><div class="strategy-card"><div class="icon">🤝</div><h4>增加信任度</h4><p>展示专业性和对孩子的关注</p></div><div class="strategy-card"><div class="icon">🔍</div><h4>为挖需做好铺垫</h4><p>自然地过渡到挖掘需求阶段</p></div></div></div><div class="card"><h2>🚫 五大拒绝理由及应对话术</h2><p style="color:var(--text-secondary);margin-bottom:16px;">面对拒绝时，不要退缩——给家长一个<strong>试听的理由</strong>。记住口诀：<span class="highlight">理解 → 价值 → 引导 → 坚持，不展开</span></p><div class="tab-wrap"><button class="tab-btn active" onclick="switchTab(this,'reason1')">没时间</button><button class="tab-btn" onclick="switchTab(this,'reason2')">小朋友不喜欢</button><button class="tab-btn" onclick="switchTab(this,'reason3')">报其他班了</button><button class="tab-btn" onclick="switchTab(this,'reason4')">没有领课/免费担心</button><button class="tab-btn" onclick="switchTab(this,'reason5')">其他理由</button></div><div class="tab-panel active" id="reason1"><div class="chat-scene"><div class="chat-msg parent"><div class="chat-avatar">家</div><div class="chat-content"><div class="chat-label">家长</div><div class="chat-bubble">我们最近太忙了，没时间上试听课呀……</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">特别能理解，所以才安排在线上上课，就是为了节约小朋友的时间，高效学习。课程时间只需要<span class="highlight">40分钟</span>，您看明天X点或者X点哪个时间方便？给小朋友安排个好老师。</div></div></div></div><div class="tips-box"><strong>要点：</strong>强调线上便利性 + 只需40分钟 + 二选一引导</div></div><div class="tab-panel" id="reason2"><div class="chat-scene"><div class="chat-msg parent"><div class="chat-avatar">家</div><div class="chat-content"><div class="chat-label">家长</div><div class="chat-bubble">我家小朋友不喜欢数学，试了也没用的……</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">可以理解，相信您之前申请试堂也是想培养下小朋友的兴趣，但这肯定需要一个过程。咱们先帮他迈开第一步，我安排一个<strong>引导性较强的老师</strong>让他先感受下，您看我们安排在明天的X点或者X点可以吧？</div></div></div></div><div class="tips-box"><strong>要点：</strong>理解家长 + 回顾初心 + 强调引导型老师 + 二选一</div></div><div class="tab-panel" id="reason3"><div class="chat-scene"><div class="chat-msg parent"><div class="chat-avatar">家</div><div class="chat-content"><div class="chat-label">家长</div><div class="chat-bubble">我们已经报了其他数学班了，暂时不考虑了……</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">明白！不过我们这节课是<strong>免费</strong>的，数学考试难度加大了，好的学校也需要数学竞赛成绩。我们的课程贴合校内考点的难度和要求，还有奥数方面的拓展。我们可以让小朋友试一节课，就当是检验目前的学习效果，您看明天下午还是晚上方便试堂？</div></div></div></div><div class="tips-box"><strong>要点：</strong>强调免费 + 竞赛需求 + 校内贴合 + 检验效果</div></div><div class="tab-panel" id="reason4"><div class="chat-scene"><div class="chat-msg parent"><div class="chat-avatar">家</div><div class="chat-content"><div class="chat-label">家长</div><div class="chat-bubble">免费的会不会质量不行啊？/ 我没领过这个课……</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">这个没关系，我们这节课<strong>不仅是一节试听课，也是一节测评课</strong>。我们的老师都是非常优秀的老师，可以对小朋友的数学水平进行一个<strong>全方位评估</strong>。您也可以正好检验一下小朋友目前的学习效果。您看帮小朋友安排在明天的X点或者X点测试一下？</div></div></div></div><div class="tips-box"><strong>要点：</strong>试听课=测评课 + 优秀老师 + 全方位评估 + 检验效果</div></div><div class="tab-panel" id="reason5"><div class="chat-scene"><div class="chat-msg parent"><div class="chat-avatar">家</div><div class="chat-content"><div class="chat-label">家长</div><div class="chat-bubble">我再考虑一下 / 我回去跟家人商量……</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">理解理解～不过体验一次又不花钱，试了才知道适不适合。先帮小朋友排一节课，体验完了您再和家人商量也更有依据呀！明后天哪个时间段比较方便呢？</div></div></div></div><div class="tips-box"><strong>要点：</strong>不施压 + 零成本体验 + 体验后更有依据 + 轻松引导</div></div></div>` },
+  { id:'s3', title:'挖需四步法', duration:'8-10分钟', icon:'3', type:'content_quiz', quizId:'quiz3', content:`<div class="section-header"><span class="section-badge">第3章</span><h1>挖需四步法</h1><p class="duration">⏱ 学习时长：8-10分钟 | 📝 含5道测验题</p></div><div class="card"><h2>🧠 什么是挖需？</h2><div style="text-align:center;padding:20px 0;"><div style="font-size:48px;margin-bottom:8px;">🎯</div><div style="font-size:20px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;">需求 = 现状 和 对未来的期待 之间的距离</div><div style="font-size:15px;color:var(--text-secondary);">「有需求 → 扩大需求」&nbsp;&nbsp;|&nbsp;&nbsp;「没有需求 → 创造需求」</div></div><div class="highlight-box warning">⚠️ 重要原则：没有挖到需求之前，不要报价、不要抛优惠！</div></div><div class="card"><h2>🎯 挖需的目的：塑造销售三性</h2><div class="strategy-grid"><div class="strategy-card" style="border:2px solid var(--primary);"><div class="icon">📐</div><h4>必要性</h4><p>决定了数学是不是要报班学</p></div><div class="strategy-card" style="border:2px solid var(--primary);"><div class="icon">🏫</div><h4>唯一性</h4><p>决定了是不是要在这里学</p></div><div class="strategy-card" style="border:2px solid var(--primary);"><div class="icon">⏰</div><h4>紧迫性</h4><p>决定了是不是要现在开始学</p></div></div></div><div class="card"><h2>📊 挖需四步流程</h2><div class="flow-steps" style="margin-bottom:24px;"><div class="flow-step"><div class="step-num">①</div><h4>基本信息确认</h4></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">②</div><h4>学习经历情况</h4></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">③</div><h4>支付能力</h4></div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-num">④</div><h4>学习动机</h4></div></div><div class="step-list"><div class="step-item"><div class="step-num-big">①</div><div class="step-content"><h4>基本信息确认</h4><p>确认孩子姓名、年龄、年级（K1/K2/K3/小一/小二…），注意用轻松的语气自然过渡。</p><div class="script-tpl">"我简单和您确认一下小朋友的基本信息，小朋友的名字叫<span class="var">XX</span>对吗？今年是<span class="var">X岁</span>，上<span class="var">K3/小一</span>对吗？"</div></div></div><div class="step-item"><div class="step-num-big">②</div><div class="step-content"><h4>学习经历和情况</h4><p>了解孩子之前是否学过数学思维、校内数学成绩如何、有没有参加竞赛。挖掘孩子的强项和薄弱点。</p><div class="script-tpl">"小朋友之前有没有上过数学相关的课程呀？""校内数学成绩怎么样？""数学方面有没有感觉特别吃力的地方？"</div></div></div><div class="step-item"><div class="step-num-big">③</div><div class="step-content"><h4>支付能力判断</h4><p>通过了解家庭对教育投入的态度、报班预算等，判断家长的支付意愿和能力。注意：不要直接问收入！</p><div class="tips-box"><strong>技巧：</strong>通过"之前报过什么班？""读的是英文还是中文校？"等间接问题判断</div></div></div><div class="step-item"><div class="step-num-big">④</div><div class="step-content"><h4>学习动机挖掘</h4><p>了解家长想让小朋友学数学的深层动机，是否有明确目标（升学/竞赛/培养思维）。<strong>这一步直接为后续关单做铺垫！</strong></p><div class="script-tpl">"您觉得小朋友学数学主要是为了什么呢？是学校考试需要，还是想培养一下思维能力？""有没有考虑过以后参加数学竞赛？"</div></div></div></div></div><div class="card"><h2>💡 挖需关键技巧</h2><div class="strategy-grid"><div class="strategy-card"><div class="icon">👂</div><h4>多听少说</h4><p>让家长说70%，你说30%</p></div><div class="strategy-card"><div class="icon">🔓</div><h4>多用开放式提问</h4><p>获取更多信息，不引导答案</p></div><div class="strategy-card"><div class="icon">📝</div><h4>记录关键信息</h4><p>为后续个性化推荐做准备</p></div><div class="strategy-card"><div class="icon">💰</div><h4>先挖需再报价</h4><p>没挖到需求绝不报价</p></div></div></div>` },
+  { id:'s4', title:'试听课推荐与定级', duration:'10-12分钟', icon:'4', type:'content_quiz', quizId:'quiz4', content:`<div class="section-header"><span class="section-badge">第4章</span><h1>试听课推荐与定级</h1><p class="duration">⏱ 学习时长：10-12分钟 | 📝 含5道测验题</p></div><div class="card"><h2>📊 九阶试听课课件总览</h2><p style="color:var(--text-secondary);margin-bottom:16px;">根据孩子的年龄和数学基础，从 S1~S8 级别中精确匹配最合适的试听课。</p><div style="overflow-x:auto;"><table class="data-table"><thead><tr><th class="phase-header" colspan="2">阶段</th><th class="phase-header" colspan="4">S1启蒙段</th><th class="phase-header" colspan="3">S2基础段</th><th class="phase-header" colspan="2">S3进阶段</th><th class="phase-header" colspan="2">S4高阶段</th></tr><tr><th>语言</th><th>类型</th><th>乐迪的一天</th><th>光影魔术师</th><th>海底派对</th><th>最棒的演出</th><th>欢乐舞会</th><th>欢乐博物馆</th><th>皮皮虎的礼物</th><th>新智闯悬浮岛</th><th>魔法集市奇遇</th><th>魔法水源</th><th>逃离暴风雨</th></tr></thead><tbody><tr><td rowspan="3"><strong>粤语</strong></td><td>字体</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td></tr><tr><td>提示音</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td></tr><tr><td>动画</td><td>✗</td><td>✗</td><td>✗</td><td class="check">✓</td><td>✗</td><td>✗</td><td class="check">✓</td><td class="check">✓</td><td>✗</td><td class="check">✓</td><td>✗</td></tr></tbody></table></div></div><div class="card"><h2>🔄 试听课定级决策流程</h2><div style="text-align:center;padding:12px;"><div class="flow-steps" style="flex-direction:column;gap:8px;"><div class="flow-step" style="background:#FEF2F2;border-color:#DC2626;"><h4>确认年龄 & 年级</h4></div><div class="flow-arrow" style="transform:rotate(90deg);">→</div><div class="flow-step" style="background:#FFFBEB;border-color:#D97706;"><h4>判断数学基础</h4><p>校内成绩/有无培训经历</p></div><div class="flow-arrow" style="transform:rotate(90deg);">→</div><div class="flow-step" style="background:#ECFDF5;border-color:#059669;"><h4>匹配对应阶段</h4><p>S1~S8</p></div><div class="flow-arrow" style="transform:rotate(90deg);">→</div><div class="flow-step" style="background:#EEF2FF;border-color:#4F46E5;"><h4>选择语言版本</h4><p>粤语/英语</p></div><div class="flow-arrow" style="transform:rotate(90deg);">→</div><div class="flow-step" style="background:var(--primary);color:white;border-color:var(--primary-dark);"><h4>确认并推荐试听课</h4></div></div></div></div><div class="card"><h2>🗣️ 确认难度和时间的话术</h2><div class="chat-scene"><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">根据刚才了解到的情况，小朋友目前在<span class="highlight">XX年级</span>，数学基础<span class="highlight">XX</span>，我帮小朋友安排的是<span class="highlight">SX阶段</span>的试听课，课程主题是《<span class="highlight">XX</span>》。这节课主要帮助小朋友解决<span class="highlight">XX</span>问题，非常适合小朋友目前的情况。</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">试堂时间安排在明天<span class="highlight">XX点</span>，您看这个时间方便吗？</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC · 💉 打预防针</div><div class="chat-bubble">💡 温馨提醒一下：试听课是第一次上课，小朋友可能会有些不适应或者反应偏慢，这是<span class="highlight">非常正常的</span>。我们的老师非常有经验，会根据小朋友的课堂表现灵活调整节奏。所以课堂上家长不用太紧张，也<span class="highlight">尽量不要在旁边替小朋友回答问题</span>，让小朋友自己尝试、自己表达，这样老师才能更准确地判断小朋友的真实水平，后续也能给出更精准的学习建议。</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC · 👨‍👩‍👧 确认陪同人</div><div class="chat-bubble">另外想确认一下，上课当天是<span class="highlight">哪位家长</span>陪小朋友一起上课呢？是爸爸、妈妈，还是家里的其他长辈？方便我们老师提前了解情况，上课时也会更有针对性地和家长沟通～</div></div></div></div></div>` },
+  { id:'s5', title:'电话收尾与WS跟进', duration:'8-10分钟', icon:'5', type:'content_quiz', quizId:'quiz5', content:`<div class="section-header"><span class="section-badge">第5章</span><h1>电话收尾与WS跟进</h1><p class="duration">⏱ 学习时长：8-10分钟 | 📝 含5道测验题</p></div><div class="card"><h2>📞 挂机前 — 三个关键确认</h2><div class="highlight-box warning"><strong>时机：</strong>在确认完上课难度和时间后、礼貌挂机之前，必须完成以下三项确认</div><div class="step-list"><div class="step-item"><div class="step-num-big">1</div><div class="step-content"><h4>确认上课设备 <span class="badge badge-primary">电脑/iPad/手机</span></h4><p>询问家长上课使用什么设备（电脑、iPad还是手机），确认是否已下载APP。如未下载，指引家长提前安装，确保上课当天设备就绪。</p></div></div><div class="step-item"><div class="step-num-big">2</div><div class="step-content"><h4>确认添加好 WhatsApp <span class="badge badge-warning">私域连接</span></h4><p>确认家长已添加CC的WhatsApp/微信为好友，建立私域触达通道。这是后续发送资料、跟进提醒、课后沟通的基础。</p></div></div><div class="step-item"><div class="step-num-big">3</div><div class="step-content"><h4>试探报课意向 <span class="badge badge-success">关键铺垫</span></h4><p>在确认设备后顺势试探家长报课态度："小朋友试听完如果喜欢的话，后续报课方面您是怎么考虑的呢？" 提前感知家长的预算和意向，为后续关单做准备。</p></div></div></div></div><div class="card"><h2>💬 挂机前对话示例</h2><div class="chat-scene"><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC · 🔌 确认设备</div><div class="chat-bubble">另外想确认一下，小朋友上课是用<span class="highlight">电脑、iPad还是手机</span>呢？如果还没有下载APP的话，我稍后把下载链接发到您的WhatsApp上，您可以提前装好试试~</div></div></div><div class="chat-msg parent"><div class="chat-avatar">家</div><div class="chat-content"><div class="chat-label">家长</div><div class="chat-bubble">用iPad，还没下载APP呢。</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC · 📲 确认WhatsApp</div><div class="chat-bubble">好的，iPad在应用商店搜索"豌豆素质学生端"就可以下载。对了，我刚加了您的<span class="highlight">WhatsApp</span>，您通过一下好友请求，我马上把所有资料发给您~</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC · 🎯 试探报课意向</div><div class="chat-bubble">太好了！还有一个事儿想提前问问您：<span class="highlight">小朋友试听完如果喜欢的话，后续报课方面您是怎么考虑的呢？</span> 这样我也可以提前帮您留意一下合适的阶段和老师。</div></div></div></div></div><div class="card"><h2>☎️ 电话结束语</h2><div class="highlight-box">目的：再次介绍自己加深印象，告知后续动作，礼貌挂机</div><div class="chat-scene"><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">好的，那我们就定在明天下午2点半，我已经帮小朋友安排好老师了。稍后我会通过<span class="highlight">WhatsApp</span>把试听课的详细信息发给您，包括APP下载链接、课程内容介绍和约课提醒。如果有什么问题随时联系我，我是课程顾问<span class="highlight">XX</span>~</div></div></div></div></div><div class="card"><h2>📤 挂机后 — 必发三件套</h2><div class="highlight-box warning">挂机后立即通过 WhatsApp/微信发送以下三样内容</div><div class="strategy-grid"><div class="strategy-card"><div class="icon">💻</div><h4>APP下载方式</h4><p>电脑端：https://siwei.hltn.com/download；手机/iPad：应用商店搜索"豌豆素质学生端"</p></div><div class="strategy-card"><div class="icon">📖</div><h4>试听内容介绍</h4><p>根据小朋友年龄和基础，发送对应级别的课件主题和内容简介</p></div><div class="strategy-card"><div class="icon">⏰</div><h4>约课提醒</h4><p>包含时间、账号、主题、内容，提醒提前下载APP准时上课</p></div></div></div><div class="card"><h2>📝 约课提醒模板</h2><div class="script-tpl"><span class="var">XX妈妈</span>您好，小朋友的课程已经安排好了🎉
+试堂时间：<span class="var">明天 XX:XX</span>
+试堂账号：<span class="var">xxxxxxxxxxxx</span>
+课程主题：<span class="var">《XX》</span>
+课程内容：<span class="var">这堂课主要引导小朋友解决XX问题…</span>
+您记得帮小朋友预留时间，提前下载APP，准时上堂哦~~ 😊</div></div>` },
+  { id:'s6', title:'跟课流程', duration:'8-10分钟', icon:'6', type:'content_quiz', quizId:'quiz6', content:`<div class="section-header"><span class="section-badge">第6章</span><h1>跟课流程</h1><p class="duration">⏱ 学习时长：8-10分钟 | 📝 含5道测验题</p></div><div class="card"><h2>📋 跟课流程总览</h2><div class="flow-steps"><div class="flow-step" style="background:#FEF2F2;border-color:#DC2626;"><h4>课前2小时提醒</h4><p>第一次触达</p></div><div class="flow-arrow">→</div><div class="flow-step" style="background:#FFFBEB;border-color:#D97706;"><h4>课前30分钟提醒</h4><p>第二次触达</p></div><div class="flow-arrow">→</div><div class="flow-step" style="background:#ECFDF5;border-color:#059669;"><h4>课前5分钟提醒</h4><p>最后确认</p></div><div class="flow-arrow">→</div><div class="flow-step" style="background:#EEF2FF;border-color:#4F46E5;"><h4>课中观察</h4><p>关注互动情况</p></div></div></div><div class="card"><h2>⏰ 课前提醒 - 三个关键节点</h2><div class="step-list"><div class="step-item"><div class="step-num-big">1</div><div class="step-content"><h4>课前2小时提醒 <span class="badge badge-primary">第一次触达</span></h4><p>通过WS/微信发送提醒消息，包含：上课时间、APP下载链接、课程主题、上课账号。确认家长已收到并知晓。如果家长未回复，可电话跟进确认。</p></div></div><div class="step-item"><div class="step-num-big">2</div><div class="step-content"><h4>课前30分钟提醒 <span class="badge badge-warning">第二次触达</span></h4><p>再次提醒家长即将上课，确认设备和网络是否正常。建议家长提前5分钟进入教室等待。如发现异常（设备问题、网络问题），及时协助解决。</p></div></div><div class="step-item"><div class="step-num-big">3</div><div class="step-content"><h4>课前5分钟提醒 <span class="badge badge-success">最后确认</span></h4><p>最后确认家长和孩子已准备好进入教室。查看后台是否显示在线，如未上线立即电话联系。确保准时出席率。</p></div></div></div></div><div class="card"><h2>👀 课中观察</h2><div class="step-list"><div class="step-item"><div class="step-num-big">4</div><div class="step-content"><h4>课中观察要点 <span class="badge badge-primary">上课期间</span></h4><p>关注课堂互动情况：孩子是否积极参与、与老师的互动质量、家长是否在旁观看。记录关键亮点和问题点。</p><ul style="margin-top:8px;padding-left:18px;color:var(--text-secondary);font-size:14px;"><li>孩子参与度：是否主动回答问题、是否投入课堂游戏</li><li>师生互动：老师引导是否到位、孩子是否理解指令</li><li>家长状态：是否在旁观看、是否有互动或提问</li><li>技术问题：是否有卡顿、掉线、声音画面异常</li></ul></div></div></div></div><div class="card"><h2>💡 提醒话术模板</h2><div class="chat-scene"><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课前2小时 · WS提醒</div><div class="chat-bubble">家长您好~温馨提示：小朋友<span class="highlight">XX的试听课</span>将在今天<span class="highlight">XX:XX</span>开始，课程主题是《<span class="highlight">XX</span>》。如还未下载APP，请点击链接下载：<span class="highlight">https://siwei.hltn.com/download</span>。上课账号：<span class="highlight">XXXXXX</span>。收到请回复，谢谢！😊</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课前30分钟 · WS提醒</div><div class="chat-bubble">家长您好，还有30分钟就要上课啦~请您确认设备和网络正常，提前5分钟进入教室准备哦。如有任何问题随时联系我！</div></div></div><div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课前5分钟 · WS提醒</div><div class="chat-bubble">家长您好，马上要开始啦~请点击进入教室，老师在等小朋友了哦！🎉</div></div></div></div></div>` },
+  { id:'s7', title:'AI模拟对话', duration:'10-15分钟', icon:'💬', type:'content_chart_dialogue', quizId:'quiz7', content:`<div class="section-header"><span class="section-badge">第7章</span><h1>AI模拟对话</h1><p class="duration">⏱ 学习时长：10-15分钟 | 💬 含AI语义评分</p></div><div class="card"><h2>🎭 实战场景模拟</h2><p style="color:var(--text-secondary);margin-bottom:12px;">综合运用前面6章所学，从<strong>开场白 → 异议处理 → 挖需 → 推荐试课 → 确认收尾</strong>，完成一整通完整的CC课前电话。</p></div>` },
+  { id:'s8', title:'终极考核', duration:'15-20分钟', icon:'🏆', type:'content', content:`<div class="section-header"><span class="section-badge">第8章</span><h1>终极综合考核</h1><p class="duration">⏱ 学习时长：15-20分钟 | 🏆 含三维度评分</p></div><div class="card"><h2>📝 考核说明</h2><p style="line-height:1.8;">请根据以下场景，写出<strong>完整的CC课前电话话术</strong>（从开场白到挂机收尾），字数不少于150字。</p><div class="highlight-box"><strong>场景：</strong>家长在FB平台为孩子（女，6岁，K3）申请了数学思维试听课。孩子之前没有上过数学培训班，校内数学兴趣一般。家长提到孩子有点害羞，担心上课效果。请根据SOP流程，写出完整话术，涵盖：开场白 → 异议处理（害羞/担心）→ 挖需四步 → 推荐试听课（S1启蒙段/最棒的演出）→ 确认设备+WhatsApp+试探报课意向 → 礼貌收尾。</div></div><div class="final-task-container"><textarea class="final-task-input" id="finalTaskInput" placeholder="请在此输入你的完整话术……"></textarea><div class="char-counter" id="finalCharCount">0 / 500字</div><div style="margin-top:12px;display:flex;gap:12px;"><button class="btn" onclick="submitFinalTask()">📝 提交考核</button><button class="btn btn-outline" onclick="resetFinalTask()">🔄 重新作答</button></div><div class="ai-feedback-panel" id="finalFeedback"></div></div>` }
+]};
 
-function showToast(msg) {
-  let t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timeout);
-  t._timeout = setTimeout(() => { t.classList.remove('show'); }, 2500);
+// Quiz data
+const quizzes = {
+  quiz1: { quizId:'quiz1', isDialogue:false, question:'请完成以下5道选择题，检验第1章的学习效果：', options:[], correct:-1, feedback_correct:'', feedback_wrong:'' },
+  quiz2: { quizId:'quiz2', isDialogue:false, question:'请完成以下5道选择题，检验第2章的学习效果：', options:[], correct:-1, feedback_correct:'', feedback_wrong:'' },
+  quiz3: { quizId:'quiz3', isDialogue:false, question:'请完成以下5道选择题，检验第3章的学习效果：', options:[], correct:-1, feedback_correct:'', feedback_wrong:'' },
+  quiz4: { quizId:'quiz4', isDialogue:false, question:'请完成以下5道选择题，检验第4章的学习效果：', options:[], correct:-1, feedback_correct:'', feedback_wrong:'' },
+  quiz5: { quizId:'quiz5', isDialogue:false, question:'请完成以下5道选择题，检验第5章的学习效果：', options:[], correct:-1, feedback_correct:'', feedback_wrong:'' },
+  quiz6: { quizId:'quiz6', isDialogue:false, question:'请完成以下5道选择题，检验第6章的学习效果：', options:[], correct:-1, feedback_correct:'', feedback_wrong:'' },
+  quiz7: { quizId:'quiz7', isDialogue:true,
+    question:'你刚拿到一份试听申请名单：家长在FB平台为孩子（女，6岁，K3）申请了数学思维试听课。请按照CC课前课中完整SOP流程（开场白 → 异议处理 → 挖需 → 推荐试课 → 确认收尾），写出你给家长打电话时要说的话术。',
+    scenario:'综合实战场景：家长为6岁K3女孩申请了试听课，之前没上过数学培训班，校内数学兴趣一般，孩子有点害羞。你需要展示完整的CC电话SOP。',
+    expectedKeywords:[
+      { concept:'开场白·表明身份', terms:['课程顾问','豌豆素质','致电','打电话','来电','联系您','XX平台','FB','申请','试听','试堂','数学思维'], weight:10 },
+      { concept:'提问授权', terms:['了解','小朋友','情况','安排难度','合适','上课体验','了解一下'], weight:8 },
+      { concept:'异议处理·害羞担心', terms:['害羞','担心','引导','引导性','有经验','适应','迈开第一步','鼓励','体验','没关系','正常'], weight:12 },
+      { concept:'挖需·基本信息', terms:['名字','年龄','6岁','K3','年级','基本信息'], weight:8 },
+      { concept:'挖需·学习经历', terms:['学过','数学','培训','成绩','兴趣','培训班','困难','吃力','薄弱'], weight:10 },
+      { concept:'挖需·学习动机', terms:['学习目的','培养','思维','能力','升学','学校','数学基础','打好基础','竞赛','考试','逻辑','信心'], weight:12 },
+      { concept:'推荐·匹配阶段', terms:['S1','启蒙','最棒的演出','试听课','级别','难度','课程主题','适合','年龄'], weight:10 },
+      { concept:'打预防针', terms:['预防针','第一次','不适应','反应','正常','不要替答','自己表达','自己尝试','判断水平'], weight:8 },
+      { concept:'收尾·确认+试探', terms:['设备','iPad','电脑','手机','下载','WhatsApp','微信','好友','报课','意向','考虑','试听完'], weight:12 }
+    ]
+  }
+};
+
+// Chapter MC quizzes (embedded in content, not in quizzes object)
+const chapterQuizzes = [
+  [ // ch1
+    { q:'课前电话的首要目的是？', opts:['直接推销课程套餐','告诉家长我们是最便宜的','约课、挖需、建立关系、添加联系方式','催促家长尽快付款'], correct:2 },
+    { q:'以下哪项不是CC的核心角色？', opts:['教育顾问——专业诊断学习问题','信任桥梁——建立家长信任','价格谈判师——把课程价格压到最低','资源匹配师——精准推荐合适课程'], correct:2 },
+    { q:'想获取更多信息时，应使用哪种提问方式？', opts:['封闭式提问','选择式提问','开放式提问','反问式提问'], correct:2 },
+    { q:'课前电话流程的正确顺序是？', opts:['开场白→异议处理→挖需→推荐试课→约课收尾','挖需→开场白→异议处理→推荐试课→约课收尾','推荐试课→开场白→挖需→异议处理→约课收尾','开场白→推荐试课→挖需→约课收尾→异议处理'], correct:0 },
+    { q:'以下哪项属于"选择式提问"？', opts:['"小朋友数学成绩怎么样？"','"小朋友是不是不喜欢数学？"','"您看明天下午还是晚上方便试堂？"','"为什么想给小朋友报数学班？"'], correct:2 }
+  ],
+  [ // ch2
+    { q:'面对家长说"没时间"，最有效的应对策略是？', opts:['告诉家长"再忙也要关心孩子学习"','强调线上只需40分钟+节约时间+二选一引导','建议家长周六日再约','放弃这个家长，联系下一个'], correct:1 },
+    { q:'标准开场白的正确三步法是？', opts:['表明身份→告知来电目的→让客户感觉有帮助','寒暄→报价→催单','加微信→发资料→约时间','自我介绍→介绍课程→要求付款'], correct:0 },
+    { q:'提问授权的三大目的不包括？', opts:['展示公司的课程价格优势','增加安全感','增加信任度','为挖需做好铺垫'], correct:0 },
+    { q:'面对"已经报了其他班"，正确话术应强调什么？', opts:['贬低竞品机构的不足','免费体验+贴合校内+竞赛需求+检验学习效果','直接给折扣优惠','告诉家长退掉原来的班'], correct:1 },
+    { q:'异议处理的核心口诀是？', opts:['反驳→说服→成交→收款','降价→送课→再降价→再送课','理解→价值→引导→坚持，不展开','沉默→倾听→记录→下次再聊'], correct:2 }
+  ],
+  [ // ch3
+    { q:'挖需四步的正确顺序是？', opts:['支付能力→基本信息→学习动机→学习经历','基本信息→学习经历→支付能力→学习动机','学习动机→基本信息→支付能力→学习经历','学习经历→支付能力→学习动机→基本信息'], correct:1 },
+    { q:'以下哪项对"需求"的定义最准确？', opts:['客户想买的东西','现状和未来期待之间的距离','家长能接受的最高价格','小朋友最喜欢的学科'], correct:1 },
+    { q:'挖需的目的——塑造"销售三性"不包括？', opts:['便宜性——证明我们的课程最便宜','必要性——数学是不是要报班学','唯一性——是不是要在这里学','紧迫性——是不是要现在开始学'], correct:0 },
+    { q:'挖需阶段最重要的原则是？', opts:['多说少听，展示专业性','尽快报价，抢占先机','没有挖到需求之前，不要报价抛优惠','跳过支付能力判断，直接问学习动机'], correct:2 },
+    { q:'判断家长支付能力时，正确的做法是？', opts:['直接问"你们家庭月收入多少？"','通过"之前报过什么班？""读的是英文还是中文校？"间接了解','查看家长的微信朋友圈判断','不需要判断，直接推荐最贵的套餐'], correct:1 }
+  ],
+  [ // ch4
+    { q:'推荐试听课等级的核心依据是？', opts:['家长的收入水平','随机分配一个级别','孩子的年龄、年级和数学基础综合判断','家长自己选择喜欢哪个主题'], correct:2 },
+    { q:'九阶课件体系中，S1阶段属于什么段？', opts:['基础段','启蒙段','进阶段','高阶段'], correct:1 },
+    { q:'粤语版课件在S1启蒙段已支持的主题包括？', opts:['乐迪的一天','最棒的演出','海底派对','光影魔术师'], correct:1 },
+    { q:'定级决策流程中，第二步是什么？', opts:['选择语言版本（粤语/英语）','判断数学基础（校内成绩/有无培训经历）','确认并推荐试听课','匹配对应阶段（S1~S8）'], correct:1 },
+    { q:'在确认上课难度和时间时，打预防针的主要目的是？', opts:['让家长提前准备好上课设备和课件','告知家长首课小朋友可能不适应属正常现象，不要替答，让老师准确判断水平','提醒家长课程价格较高，做好心理准备','让家长提前教会小朋友上课内容'], correct:1 }
+  ],
+  [ // ch5
+    { q:'挂机前"三个关键确认"不包括哪项？', opts:['确认上课设备（电脑/iPad/手机）','确认添加好WhatsApp','确认课程价格和优惠信息','试探报课意向'], correct:2 },
+    { q:'试探报课意向的话术范例是？', opts:['"我们这个课程价格很优惠，现在报名最划算"','"小朋友试听完如果喜欢，后续报课方面您怎么考虑？"','"您家里经济条件怎么样？能负担得起吗？"','"不报名也没关系，先试试看"'], correct:1 },
+    { q:'挂机后通过WhatsApp必发的"三件套"是？', opts:['价格表、套餐介绍、优惠活动','老师简历、公司介绍、合同模板','APP下载方式、试听内容介绍、约课提醒','课后作业、考试大纲、家长须知'], correct:2 },
+    { q:'确认上课设备的主要目的是？', opts:['确保家长提前下载APP，避免上课当天因设备问题影响出勤','推销公司推荐的设备品牌','判断家长的经济实力','统计设备型号做市场调研'], correct:0 },
+    { q:'为什么要在挂机前确认WhatsApp是否已添加？', opts:['为了多一个好友数量','建立私域触达通道，确保课后能发送资料和持续跟进','方便给家长发广告','公司要求必须完成的好友KPI'], correct:1 }
+  ],
+  [ // ch6
+    { q:'课前提醒包含几个关键时间节点？', opts:['3个——课前2小时、课前30分钟、课前5分钟','2个——课前1小时、课前5分钟','1个——课前30分钟','4个——课前1天、课前2小时、课前30分钟、课前5分钟'], correct:0 },
+    { q:'课前2小时提醒消息中不需要包含什么？', opts:['课程价格表','上课时间','APP下载链接','上课账号和课程主题'], correct:0 },
+    { q:'课前5分钟家长仍未上线，应该怎么做？', opts:['发条消息就等着','查看后台在线状态，未上线立即电话联系','直接取消本次课程','不用管，等家长自己上线'], correct:1 },
+    { q:'课中观察时应重点关注什么？', opts:['老师的穿着打扮','课程平台的UI设计','孩子参与度、师生互动质量、家长是否旁听','教室的灯光和背景布置'], correct:2 },
+    { q:'课前30分钟提醒的主要目的是？', opts:['催促家长付款','介绍课程套餐详情','确认设备和网络正常，提醒及时进入教室','发送课后作业'], correct:2 }
+  ]
+];
+
+// ============================================================
+// State
+// ============================================================
+const LS_PREFIX = 'vipthink_cc_sop';
+let currentSection = 0;
+let completedSections = new Set();
+let chapterQuizDone = [false,false,false,false,false,false];
+let quiz7Answered = false; let quiz7Score = 0;
+let finalTaskSubmitted = false; let finalScore = 0;
+let studySeconds = 0; let timerInterval = null;
+
+// ============================================================
+// Init
+// ============================================================
+function init() {
+  renderSidebar();
+  renderSections();
+  navigateTo(0);
+  setupQuizListeners();
+  setupFinalTaskListener();
+  startTimer();
+  loadNotes();
+  loadProgress();
 }
-
-// Check if all quiz questions in chapter n are attempted
-function isChapterQuizDone(n) {
-  let chCards = document.querySelectorAll('[id^="quiz' + n + '-"],[id="quiz' + n + '"]');
-  if (chCards.length === 0) return false;
-  let allAnswered = true;
-  chCards.forEach(c => {
-    if (quizScores[c.id] === undefined || quizScores[c.id] === null) allAnswered = false;
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = courseData.sections.map((s, i) => `
+    <div class="nav-section" data-index="${i}" onclick="navigateTo(${i})">
+      <div class="nav-icon">${s.icon}</div><div class="nav-info"><div class="nav-label">${s.title}</div><div class="nav-sub">⏱ ${s.duration}</div></div>
+    </div>`).join('');
+  updateSidebarLocks();
+}
+function updateSidebarLocks() {
+  document.querySelectorAll('.nav-section').forEach((el, i) => {
+    const check = canNavigateTo(i);
+    if (!check.ok && i !== currentSection) el.classList.add('locked'); else el.classList.remove('locked');
   });
-  return allAnswered;
 }
-
-// Check if all quiz questions in chapter n are answered AND correct
-function isChapterCompleted(n) {
-  let chCards = document.querySelectorAll('[id^="quiz' + n + '-"],[id="quiz' + n + '"]');
-  if (chCards.length === 0) return completedChapters.has(n);
-  let allCorrect = true;
-  chCards.forEach(c => {
-    if (!quizScores[c.id]) allCorrect = false;
+function renderSections() {
+  const main = document.getElementById('mainContent');
+  main.innerHTML = courseData.sections.map((s, i) => `
+    <div class="section" data-section="${i}">
+      ${s.content}
+      ${s.type === 'content_quiz' && i < 6 ? renderChapterQuiz(i) : ''}
+      ${s.type === 'content_chart_dialogue' ? renderDialogue(quizzes[s.quizId], i) : ''}
+      <div class="section-nav-buttons">
+        <div>${i > 0 ? '<button class="btn btn-outline" onclick="navigateTo('+(i-1)+')">← 上一章</button>' : ''}</div>
+        <div>${i < courseData.sections.length - 1 ? '<button class="btn" onclick="markComplete('+i+');navigateTo('+(i+1)+')">下一章 →</button>' : '<button class="btn btn-success" id="completeCourseBtn" onclick="tryCompleteCourse('+i+')">✓ 完成课程</button>'}</div>
+      </div>
+    </div>`).join('');
+}
+function renderChapterQuiz(chIdx) {
+  const qs = chapterQuizzes[chIdx];
+  return `
+    <div class="card" style="border-top:4px solid var(--primary);">
+      <h2 style="margin-bottom:8px;">📝 章节测验（共${qs.length}题，全部答对方可进入下一章）</h2>
+      ${qs.map((q, qi) => `
+        <div class="quiz-card" id="chquiz-${chIdx}-${qi}">
+          <div class="quiz-question">Q${qi+1}：${q.q}</div>
+          <div class="quiz-options">${q.opts.map((opt, oi) => `
+            <div class="quiz-option" data-option="${oi}" onclick="selectChQuizOption(this,${oi},${chIdx},${qi})">
+              <span class="quiz-option-label">${String.fromCharCode(65+oi)}</span><span>${opt}</span>
+            </div>`).join('')}</div>
+          <div class="quiz-feedback" id="feedback-chquiz-${chIdx}-${qi}"></div>
+        </div>`).join('')}
+        <div style="text-align:center;margin-top:8px;padding:12px;background:${chapterQuizDone[chIdx]?'#ecfdf5':'#f8fafc'};border-radius:8px;font-size:14px;">
+          ${chapterQuizDone[chIdx] ? '<span style="color:#065f46;font-weight:600;">✅ 本章测验已全部通过！</span>' : '<span style="color:#64748b;">📋 请回答所有题目（答错可以重做）</span>'}
+        </div>
+    </div>`;
+}
+function selectChQuizOption(el, oi, chIdx, qi) {
+  const card = document.getElementById('chquiz-'+chIdx+'-'+qi);
+  if (card.dataset.answered === 'true') return;
+  const q = chapterQuizzes[chIdx][qi];
+  const isCorrect = oi === q.correct;
+  card.querySelectorAll('.quiz-option').forEach(b => { b.classList.add(isCorrect ? 'correct' : ''); if(parseInt(b.dataset.option) !== oi && parseInt(b.dataset.option) !== q.correct) b.style.pointerEvents='none'; });
+  card.querySelectorAll('.quiz-option[data-option="'+oi+'"]').forEach(b => b.classList.add(isCorrect?'correct':'wrong'));
+  if(!isCorrect) card.querySelectorAll('.quiz-option[data-option="'+q.correct+'"]').forEach(b => b.classList.add('correct'));
+  const fb = document.getElementById('feedback-chquiz-'+chIdx+'-'+qi);
+  fb.textContent = isCorrect ? '✅ 回答正确！' : '❌ 回答错误，正确答案是 '+String.fromCharCode(65+q.correct)+'。可以点击重做。';
+  fb.classList.add('show', isCorrect?'correct':'wrong');
+  card.dataset.answered = 'true';
+  if(!isCorrect) card.style.borderColor = 'var(--danger)';
+  checkChapterQuizComplete(chIdx);
+}
+function checkChapterQuizComplete(chIdx) {
+  const allCorrect = chapterQuizzes[chIdx].every((q, qi) => {
+    const card = document.getElementById('chquiz-'+chIdx+'-'+qi);
+    return card && card.dataset.answered === 'true' && !card.querySelector('.quiz-option.wrong');
   });
-  return allCorrect;
-}
-
-function refreshNavButtons() {
-  for (let i = 1; i <= totalChapters; i++) {
-    let btn = document.getElementById('nextBtn' + i);
-    if (!btn) continue;
-    let isDone = isChapterQuizDone(i);
-    if (isDone) {
-      btn.classList.remove('btn-locked');
-      btn.style.pointerEvents = 'auto';
-    } else {
-      btn.classList.add('btn-locked');
-      btn.style.pointerEvents = 'none';
-    }
+  if (allCorrect && !chapterQuizDone[chIdx]) {
+    chapterQuizDone[chIdx] = true;
+    showToast('🎉 第'+(chIdx+1)+'章测验全部通过！', 'success');
+    updateSidebarLocks();
+    saveProgress();
+    // Re-render to show the ✅ status
+    renderSections();
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const section = document.querySelector('.section[data-section="'+chIdx+'"]');
+    if (section) section.classList.add('active');
+    setupQuizListeners();
+    setupFinalTaskListener();
   }
 }
 
-function nextChapter(n) {
-  // Going backward: always allowed
-  if (n < currentChapter) {
-    goToChapter(n);
-    return;
+// ============================================================
+// Navigation
+// ============================================================
+function canNavigateTo(index) {
+  if (index === 0) return { ok: true };
+  for (let i = 1; i <= index; i++) {
+    if (i <= 6 && !chapterQuizDone[i-1]) return { ok: false, msg: '请先完成第'+i+'章的所有测验题（全部答对）' };
   }
-  // Staying on current chapter: allowed
-  if (n === currentChapter) {
-    goToChapter(n);
-    return;
-  }
-  // Going forward: must complete current chapter quiz
-  if (!completedChapters.has(currentChapter)) {
-    if (isChapterQuizDone(currentChapter)) {
-      // All answered but not all correct — tell them to review
-      showToast('⚠️ 第 ' + currentChapter + ' 章有题目答错了，请检查并修正后再进入下一章');
-    } else {
-      showToast('🔒 请先完成第 ' + currentChapter + ' 章的章节测验，再进入下一章');
-    }
-    refreshNavButtons();
-    return;
-  }
-  // Allow forward navigation
-  goToChapter(n);
+  if (index === 7 && !quiz7Answered) return { ok: false, msg: '请先完成AI模拟对话并提交回答' };
+  if (index === 7 && quiz7Score < 60) return { ok: false, msg: 'AI模拟对话得分未达60分（当前'+quiz7Score+'分），请重新练习' };
+  return { ok: true };
 }
-
-function goToChapter(n) {
-  if (n < 1 || n > totalChapters) return;
-  currentChapter = n;
-  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
-  document.getElementById('ch' + n).classList.add('active');
-  updateNav(n);
-  refreshNavButtons();
+function navigateTo(index) {
+  const check = canNavigateTo(index);
+  if (!check.ok) { showToast('🔒 '+check.msg, 'warning'); return; }
+  currentSection = index;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-section').forEach(n => n.classList.remove('active'));
+  const section = document.querySelector('.section[data-section="'+index+'"]');
+  if (section) section.classList.add('active');
+  const navItem = document.querySelector('.nav-section[data-index="'+index+'"]');
+  if (navItem) navItem.classList.add('active');
+  updateProgress(); updateNotesForSection(index); saveProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+  const mhTitle = document.getElementById('mhTitle');
+  if (mhTitle) mhTitle.textContent = courseData.sections[index].title;
+}
+function markComplete(index) {
+  completedSections.add(index);
+  updateProgress(); saveProgress();
+  showToast('「'+courseData.sections[index].title+'」已完成 ✓', 'success');
+  checkCertificate();
+}
+function tryCompleteCourse(index) {
+  if (!finalTaskSubmitted) { showToast('请先完成终极考核并提交答案', 'warning'); return; }
+  if (finalScore < 60) { showToast('终极考核得分未达60分（当前'+finalScore+'分），请重新作答', 'warning'); return; }
+  markComplete(index);
+}
+function updateProgress() {
+  const total = courseData.sections.length;
+  const viewed = new Set([...completedSections, currentSection]);
+  const pct = Math.round((viewed.size / total) * 100);
+  document.getElementById('progressPercent').textContent = pct+'%';
+  document.getElementById('progressFill').style.width = pct+'%';
+  const mpb = document.getElementById('mpbFill'); if (mpb) mpb.style.width = pct+'%';
+  document.querySelectorAll('.nav-section').forEach((el, i) => { if (completedSections.has(i)) el.classList.add('completed'); });
 }
 
-function showAI() {
-  // Must complete all chapters first
-  for (let i = 1; i <= totalChapters; i++) {
-    if (!completedChapters.has(i)) {
-      if (isChapterQuizDone(i)) {
-        showToast('⚠️ 第 ' + i + ' 章有题目答错了，请检查并修正后再进入AI模拟');
-      } else {
-        showToast('🔒 请先完成第 ' + i + ' 章的章节测验');
-      }
-      return;
-    }
-  }
-  currentChapter = totalChapters + 1;
-  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
-  document.getElementById('ai-section').classList.add('active');
-  updateNav(totalChapters + 1);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+// ============================================================
+// AI Dialogue
+// ============================================================
+function renderDialogue(quiz, si) {
+  if (!quiz || !quiz.isDialogue) return '';
+  return `<div class="dialogue-container"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span style="font-size:24px;">🤖</span><h3 style="font-size:16px;font-weight:700;">AI模拟对话 · 语义评分</h3></div><div class="dialogue-scenario"><strong>📋 场景设定：</strong>${quiz.scenario}</div><div class="customer-bubble">${quiz.question}</div><textarea class="reply-input" id="dialogueInput" placeholder="请综合运用第1-6章所学SOP，写出你的完整话术。提示：Ctrl+Enter 快速提交。"></textarea><div class="dialogue-actions"><button class="btn" id="submitDialogueBtn" onclick="submitDialogue()">提交回答</button><button class="btn btn-outline" onclick="resetDialogue()">重新作答</button></div><div class="ai-feedback-panel" id="dialogueFeedback"></div></div>`;
+}
+function submitDialogue() {
+  if (quiz7Answered) return;
+  const text = document.getElementById('dialogueInput').value.trim();
+  if (text.length < 30) { showToast('请至少输入30字的话术', 'warning'); return; }
+  const quiz = quizzes.quiz7;
+  const lower = text.toLowerCase();
+  let totalScore = 0;
+  const results = quiz.expectedKeywords.map(kw => {
+    const found = kw.terms.some(t => lower.includes(t.toLowerCase()));
+    if (found) totalScore += kw.weight;
+    return { concept: kw.concept, weight: kw.weight, found };
+  });
+  const lenBonus = Math.min(10, Math.floor(text.length / 30));
+  totalScore = Math.min(100, totalScore + lenBonus);
+  quiz7Score = totalScore; quiz7Answered = true;
+  const level = totalScore >= 80 ? 'high' : totalScore >= 60 ? 'medium' : 'low';
+  const levelText = totalScore >= 80 ? '优秀！话术全面覆盖SOP要点。' : totalScore >= 60 ? '不错！基本覆盖关键流程，还有提升空间。' : '需要更多练习，建议回顾课程内容。';
+  const fb = document.getElementById('dialogueFeedback');
+  fb.innerHTML = `<div class="score-display"><div class="score-circle ${level}">${totalScore}</div><div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">综合评分</div></div><p style="text-align:center;font-size:14px;margin-bottom:12px;">${levelText}</p><p style="font-size:13px;color:#64748b;margin-bottom:8px;">AI评估基于以下关键点检测：</p><div class="keywords-result">${results.map(r => '<span class="keyword-tag '+(r.found?'found':'missing')+'">'+(r.found?'✓':'✗')+' '+r.concept+' ('+r.weight+'分)</span>').join('')}</div><p style="font-size:12px;color:#94a3b8;margin-top:8px;">📝 字数加分：+${lenBonus}分（30字1分，上限10分）</p>${totalScore >= 60 ? '<div style="margin-top:12px;padding:12px;background:#ecfdf5;border-radius:8px;font-size:13px;color:#065f46;"><strong>✅ 练习通过！</strong>AI模拟对话得分达60分以上，可以继续进入终极考核。</div>' : '<div style="margin-top:12px;padding:12px;background:#fef2f2;border-radius:8px;font-size:13px;color:#991b1b;"><strong>📚 未通过。</strong>得分不足60分，请重新练习后再进入终极考核。</div>'}`;
+  fb.classList.add('show');
+  document.getElementById('dialogueInput').disabled = true;
+  document.getElementById('submitDialogueBtn').disabled = true;
+  updateSidebarLocks(); saveProgress();
+}
+function resetDialogue() {
+  quiz7Answered = false; quiz7Score = 0;
+  document.getElementById('dialogueInput').value = '';
+  document.getElementById('dialogueInput').disabled = false;
+  document.getElementById('submitDialogueBtn').disabled = false;
+  document.getElementById('dialogueFeedback').classList.remove('show');
+  document.getElementById('dialogueFeedback').innerHTML = '';
+  updateSidebarLocks(); saveProgress();
 }
 
-function showFinal() {
-  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
-  document.getElementById('final-exam').classList.add('active');
-  // Reset exam state
-  finalAnswers = {};
-  finalExamAttempts = 0;
-  document.getElementById('exam-submit-area').style.display = 'block';
-  document.getElementById('exam-score').style.display = 'none';
-  document.getElementById('retry-exam-btn').style.display = 'none';
-  document.getElementById('cert-btn').style.display = 'none';
-  buildFinalExam();
-  currentChapter = totalChapters + 2;
-  updateNav(totalChapters + 2);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+// ============================================================
+// Final Task
+// ============================================================
+function setupFinalTaskListener() {
+  const input = document.getElementById('finalTaskInput');
+  if (input) input.addEventListener('input', function() {
+    document.getElementById('finalCharCount').textContent = this.value.length + ' / 500字';
+  });
+}
+function submitFinalTask() {
+  if (finalTaskSubmitted) return;
+  const text = document.getElementById('finalTaskInput').value.trim();
+  if (text.length < 150) { showToast('请至少输入150字的话术', 'warning'); return; }
+  const lower = text.toLowerCase();
+  // Dimension 1: Flow completeness
+  const dims = [
+    { name:'流程完整性', terms:[{concept:'开场白',terms:['课程顾问','介绍','来电','致电','申请','试听','联系'], weight:7},
+      {concept:'异议处理',terms:['害羞','担心','引导','适应','没关系','正常','体验'], weight:7},
+      {concept:'挖需',terms:['了解一下','成绩','学过','培训','兴趣','喜欢','困难','薄弱'], weight:6},
+      {concept:'推荐试课',terms:['S1','启蒙','最棒的演出','级别','难度','安排','匹配','适合'], weight:6},
+      {concept:'确认收尾',terms:['设备','iPad','电脑','手机','下载','WhatsApp','微信','试听完','意向','考虑','提醒'], weight:7}]
+  ];
+  let d1Score = 0;
+  const d1Results = dims.flatMap(d => d.terms.map(t => {
+    const found = t.terms.some(tt => lower.includes(tt.toLowerCase()));
+    if (found) d1Score += t.weight;
+    return { concept: t.concept, found };
+  }));
+  d1Score = Math.min(55, d1Score);
+  // Dimension 2: Persuasiveness
+  const dims2 = [
+    { name:'价值传递', terms:[{concept:'免费试听',terms:['免费','不收费','试听','体验'], weight:4},
+      {concept:'课程优势',terms:['豌豆','素质','老师','优秀','好老师','9阶','体系','级别'], weight:4},
+      {concept:'打预防针',terms:['预防针','第一次','不适应','反应','正常','不要替答','自己尝试','表达','判断水平','评估'], weight:5}]
+  ];
+  let d2Score = 0;
+  dims2.flatMap(d => d.terms).forEach(t => {
+    if (t.terms.some(tt => lower.includes(tt.toLowerCase()))) d2Score += t.weight;
+  });
+  d2Score = Math.min(25, d2Score);
+  // Dimension 3: Fluency (word count)
+  let d3Score = 0;
+  if (text.length >= 300) d3Score = 20;
+  else if (text.length >= 200) d3Score = 14;
+  else if (text.length >= 150) d3Score = 8;
+  finalScore = Math.min(100, d1Score + d2Score + d3Score);
+  finalTaskSubmitted = true;
+  // Build feedback
+  const level = finalScore >= 80 ? 'high' : finalScore >= 60 ? 'medium' : 'low';
+  const levelText = finalScore >= 80 ? '优秀！话术全面，SOP流程完整。' : finalScore >= 60 ? '良好！基本完成SOP流程。' : '需要更多练习，建议回顾课程内容后再试。';
+  const fb = document.getElementById('finalFeedback');
+  fb.innerHTML = `<div class="score-display"><div class="score-circle ${level}">${finalScore}</div><div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">综合评分</div></div><p style="text-align:center;font-size:14px;margin-bottom:16px;font-weight:600;">${levelText}</p><div class="eval-dimensions"><div class="eval-dim"><h4>📋 流程完整性</h4><div style="font-size:24px;font-weight:800;color:var(--primary);">${d1Score}</div><p style="font-size:12px;color:var(--text-secondary);">/55分</p><div class="keywords-result">${d1Results.filter((r,i,a) => a.findIndex(x=>x.concept===r.concept)===i).map(r => '<span class="keyword-tag '+(r.found?'found':'missing')+'">'+(r.found?'✓':'✗')+' '+r.concept+'</span>').join('')}</div></div><div class="eval-dim"><h4>💡 说服力</h4><div style="font-size:24px;font-weight:800;color:var(--primary);">${d2Score}</div><p style="font-size:12px;color:var(--text-secondary);">/25分</p></div><div class="eval-dim"><h4>✍️ 流畅度</h4><div style="font-size:24px;font-weight:800;color:var(--primary);">${d3Score}</div><p style="font-size:12px;color:var(--text-secondary);">/20分（${text.length}字）</p></div></div>${finalScore >= 60 ? '<div style="margin-top:16px;padding:14px;background:#ecfdf5;border-radius:8px;font-size:14px;color:#065f46;text-align:center;"><strong>✅ 考核通过！</strong> 终极考核得分达60分以上，可以领取结业证书。</div>' : '<div style="margin-top:16px;padding:14px;background:#fef2f2;border-radius:8px;font-size:14px;color:#991b1b;text-align:center;"><strong>📚 未通过。</strong> 得分不足60分，请点击"重新作答"后再试。</div>'}`;
+  fb.classList.add('show');
+  document.getElementById('finalTaskInput').disabled = true;
+  updateSidebarLocks(); saveProgress();
+}
+function resetFinalTask() {
+  finalTaskSubmitted = false; finalScore = 0;
+  document.getElementById('finalTaskInput').value = '';
+  document.getElementById('finalTaskInput').disabled = false;
+  document.getElementById('finalCharCount').textContent = '0 / 500字';
+  document.getElementById('finalFeedback').classList.remove('show');
+  document.getElementById('finalFeedback').innerHTML = '';
+  updateSidebarLocks(); saveProgress();
 }
 
-function updateNav(activeCh) {
-  document.querySelectorAll('.nav-item').forEach((item, i) => {
-    item.classList.remove('active', 'completed', 'locked');
-    // Only allow direct navigation to completed chapters or the current one
-    if (i === activeCh - 1 && i < totalChapters) {
-      item.classList.add('active');
-      item.style.cursor = 'pointer';
-    } else if (completedChapters.has(i + 1)) {
-      item.classList.add('completed');
-      item.style.cursor = 'pointer';
-    } else if (i < activeCh - 1) {
-      // Previous chapter but not completed - shouldn't normally happen, but handle it
-      item.style.cursor = 'pointer';
-    } else {
-      // Future chapter - locked
-      item.classList.add('locked');
-      item.style.cursor = 'not-allowed';
+// Keyboard
+function setupQuizListeners() {
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      const di = document.getElementById('dialogueInput');
+      if (di && document.activeElement === di) submitDialogue();
     }
   });
-
-  let pct = Math.round((completedChapters.size / totalChapters) * 100);
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('progressText').textContent = completedChapters.size + '/' + totalChapters + ' 章';
 }
 
-// Nav click
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', function() {
-    let ch = parseInt(this.dataset.ch);
-    if (!ch || ch > totalChapters) return;
-    // Allow clicking on completed chapters and the current one
-    if (completedChapters.has(ch) || ch === currentChapter) {
-      nextChapter(ch);
-    } else if (ch > currentChapter) {
-      // Future chapter: must complete all previous chapters
-      if (!completedChapters.has(currentChapter)) {
-        showToast('🔒 请先完成第 ' + currentChapter + ' 章的章节测验');
-      } else {
-        showToast('🔒 请按顺序学习，先完成当前章节');
-      }
-    } else {
-      // Previous chapter but not marked completed - still allow
-      nextChapter(ch);
-    }
-  });
-});
+// Timer
+function startTimer() {
+  const saved = localStorage.getItem(LS_PREFIX+'_study_seconds');
+  if (saved) studySeconds = parseInt(saved);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    studySeconds++;
+    updateTimerDisplay();
+    if (studySeconds % 10 === 0) localStorage.setItem(LS_PREFIX+'_study_seconds', studySeconds);
+  }, 1000);
+}
+function updateTimerDisplay() {
+  const mins = Math.floor(studySeconds/60), secs = studySeconds%60;
+  const ts = String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0');
+  const el = document.getElementById('timerDisplay'); if (el) el.textContent = ts;
+  const mt = document.getElementById('mhTimer'); if (mt) mt.textContent = '⏱ '+ts;
+}
 
-// ==================== QUIZ ====================
-// Add retry buttons to all quiz cards
-document.querySelectorAll('.quiz-card').forEach(card => {
-  let retryBtn = document.createElement('button');
-  retryBtn.className = 'quiz-retry-btn';
-  retryBtn.textContent = '🔄 重做';
-  retryBtn.addEventListener('click', function() {
-    card.querySelectorAll('.quiz-option').forEach(b => {
-      b.disabled = false;
-      b.classList.remove('correct', 'wrong');
+// Notes
+function toggleNotes() { document.getElementById('notesPanel').classList.toggle('open'); }
+function updateNotesForSection(index) {
+  document.getElementById('notesChapterLabel').textContent = courseData.sections[index].title;
+  const saved = JSON.parse(localStorage.getItem(LS_PREFIX+'_notes')||'{}');
+  document.getElementById('notesTextarea').value = saved[index]||'';
+}
+function loadNotes() {
+  const saved = JSON.parse(localStorage.getItem(LS_PREFIX+'_notes')||'{}');
+  const ta = document.getElementById('notesTextarea');
+  if (ta) {
+    ta.value = saved[currentSection]||'';
+    ta.addEventListener('input', function() {
+      const all = JSON.parse(localStorage.getItem(LS_PREFIX+'_notes')||'{}');
+      all[currentSection] = this.value;
+      localStorage.setItem(LS_PREFIX+'_notes', JSON.stringify(all));
     });
-    let fb = card.querySelector('.quiz-feedback');
-    fb.classList.remove('show', 'correct', 'wrong');
-    fb.textContent = '';
-    this.classList.remove('show');
-    // Clear the score for this card so chapter completion is re-evaluated
-    delete quizScores[card.id];
-    let chMatch = card.id.match(/^quiz(\d+)/);
-    if (chMatch) {
-      let chNum = parseInt(chMatch[1]);
-      completedChapters.delete(chNum);
-      updateNav(chNum);
+  }
+}
+
+// Progress persistence
+function saveProgress() {
+  const state = { completedSections: [...completedSections], chapterQuizDone, quiz7Answered, quiz7Score, finalTaskSubmitted, finalScore };
+  localStorage.setItem(LS_PREFIX+'_progress', JSON.stringify(state));
+}
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LS_PREFIX+'_progress'));
+    if (saved) {
+      completedSections = new Set(saved.completedSections||[]);
+      chapterQuizDone = saved.chapterQuizDone || [false,false,false,false,false,false];
+      quiz7Answered = saved.quiz7Answered||false; quiz7Score = saved.quiz7Score||0;
+      finalTaskSubmitted = saved.finalTaskSubmitted||false; finalScore = saved.finalScore||0;
+      updateProgress(); updateSidebarLocks();
+      if (finalTaskSubmitted) {
+        const inp = document.getElementById('finalTaskInput');
+        if (inp) inp.disabled = true;
+      }
     }
-    refreshNavButtons();
-  });
-  card.appendChild(retryBtn);
-});
+  } catch(e) {}
+}
 
-document.querySelectorAll('.quiz-card').forEach(card => {
-  card.querySelectorAll('.quiz-option').forEach(btn => {
-    btn.addEventListener('click', function() {
-      if (this.disabled) return;
-      let fb = card.querySelector('.quiz-feedback');
-      let retryBtn = card.querySelector('.quiz-retry-btn');
-      let isCorrect = this.dataset.answer === 'correct';
+// Certificate
+function checkCertificate() {
+  const allDone = completedSections.size >= courseData.sections.length && quiz7Answered && quiz7Score >= 60 && finalTaskSubmitted && finalScore >= 60;
+  if (allDone) {
+    setTimeout(() => {
+      showToast('🏆 恭喜完成全部课程！点击领取结业证书', 'success');
+      document.getElementById('certStudentName').textContent = '请填写姓名';
+      document.getElementById('certScore').textContent = '综合评定：通过';
+      document.getElementById('certFinalScore').textContent = '终极考核得分：'+finalScore+' 分';
+      document.getElementById('certDate').textContent = new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
+      document.getElementById('certOverlay').style.display = 'flex';
+    }, 1000);
+  }
+}
+function closeCertificate() { document.getElementById('certOverlay').style.display = 'none'; }
+function printCertificate() {
+  const cert = document.getElementById('certPaper');
+  const win = window.open('','_blank','width=750,height=600');
+  win.document.write('<html><head><meta charset="UTF-8"><title>结业证书</title><style>');
+  win.document.write('body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f1f5f9;}');
+  win.document.write('.cert{background:#fff;width:700px;padding:48px 36px;text-align:center;border:2px solid #e2e8f0;border-radius:12px;}');
+  win.document.write('.cert h1{font-size:28px;color:#3730A3;margin-bottom:4px;}');
+  win.document.write('.cert .sub{font-size:12px;color:#64748b;letter-spacing:0.1em;margin-bottom:24px;}');
+  win.document.write('.cert .body{font-size:15px;line-height:2;color:#1e293b;}');
+  win.document.write('.cert .name{display:inline-block;border-bottom:2px solid #4F46E5;min-width:120px;padding:4px 12px;margin:0 4px;}');
+  win.document.write('.cert .course{font-weight:700;color:#3730A3;margin:8px 0;}');
+  win.document.write('.cert .score{margin:20px 0 4px;font-size:16px;font-weight:600;color:#10b981;}');
+  win.document.write('.cert .final-score{margin:4px 0 20px;font-size:14px;font-weight:600;color:#3730A3;}');
+  win.document.write('.cert .footer{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-top:32px;border-top:1px solid #e2e8f0;padding-top:16px;}');
+  win.document.write('</style></head><body><div class="cert">');
+  win.document.write(cert.innerHTML.replace(/<button[^>]*>.*?<\/button>/g,''));
+  win.document.write('</div></body></html>');
+  win.document.close(); setTimeout(() => win.print(), 500);
+}
 
-      card.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
-      card.querySelectorAll('.quiz-option[data-answer="correct"]').forEach(b => b.classList.add('correct'));
-      if (!isCorrect) {
-        this.classList.add('wrong');
-        retryBtn.classList.add('show');
-        fb.textContent = '❌ 回答错误，点击「重做」按钮可以重新作答。';
-        fb.classList.add('show', 'wrong');
-      } else {
-        retryBtn.classList.remove('show');
-        fb.textContent = '✅ 回答正确！';
-        fb.classList.add('show', 'correct');
-      }
-
-      quizScores[card.id] = isCorrect;
-      // check if all questions in this chapter are correct
-      let chMatch = card.id.match(/^quiz(\d+)/);
-      if (chMatch) {
-        let chNum = parseInt(chMatch[1]);
-        if (isChapterCompleted(chNum) && !completedChapters.has(chNum)) {
-          completedChapters.add(chNum);
-          updateNav(chNum);
-          showToast('🎉 恭喜！第 ' + chNum + ' 章测验全部通过！已解锁下一章。');
-          refreshNavButtons();
-        } else if (!isChapterCompleted(chNum) && completedChapters.has(chNum)) {
-          completedChapters.delete(chNum);
-          updateNav(chNum);
-          refreshNavButtons();
-        }
-      }
-      // Always refresh nav buttons to update locked state
-      refreshNavButtons();
-    });
-  });
-});
-
-// ==================== Initialize ====================
-// On page load, lock all next buttons except maybe show chapter 1's button as locked initially
-refreshNavButtons();
-
-// ==================== TABS ====================
+// Tab switching
 function switchTab(btn, panelId) {
   btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1550,254 +776,19 @@ function switchTab(btn, panelId) {
   document.getElementById(panelId).classList.add('active');
 }
 
-// ==================== CHECKLIST ====================
-function toggleCheck(el) {
-  el.classList.toggle('checked');
-  if (el.classList.contains('checked')) {
-    el.textContent = '✓';
-  } else {
-    el.textContent = '';
-  }
+// Toast & Sidebar
+function showToast(msg, type) {
+  const existing = document.querySelector('.toast'); if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast '+type; toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
 }
-
-// ==================== AI DIALOGUE ====================
-const aiScenes = {
-  '1': {
-    title: '开场白 + 提问授权',
-    messages: [
-      { role: 'system', text: '你拿到了一份试听申请名单，现在要给家长打第一通电话。' },
-      { role: 'cc', text: '您好，我是豌豆素质的课程顾问XX。之前在XX平台看到您为孩子申请了数学思维试听课，今天特地给您来电，想了解一下小朋友的情况。' },
-      { role: 'parent', text: '哦你好，是的，我们之前在网上填了个表。' },
-    ],
-    options: [
-      { text: '"是这样的，我们现在有优惠活动，要不要了解一下？"', feedback: '❌ 太急了！还没有挖需就先推销，会让家长反感。应该先建立信任。', score: 0 },
-      { text: '"为了给小朋友安排一节难度合适的数学课，让小朋友有一个更好的上课体验，想跟您了解一下小朋友的情况……"', feedback: '✅ 完美！这是标准开场话术，既说明了来意又为挖需做好了铺垫。', score: 10 },
-      { text: '"这边想确认一下您的联系方式，方便加个微信吗？"', feedback: '⚠️ 还可以，但跳过了重要的提问授权环节，家长可能产生戒备。', score: 5 },
-    ]
-  },
-  '2': {
-    title: '家长说"没时间"',
-    messages: [
-      { role: 'system', text: '你已经介绍了课程，家长开始推脱。' },
-      { role: 'parent', text: '我们最近太忙了，没时间上试听课呀……你们这个课要上多久？' },
-    ],
-    options: [
-      { text: '"没关系，等您有时间了再联系我。"', feedback: '❌ 不要轻易放弃！这等于把机会拱手让人。', score: 0 },
-      { text: '"其实很多家长都有这个顾虑，我们安排的是周六方便吗？"', feedback: '⚠️ 没有解决核心顾虑，应该强调线上便捷和课程时长优势。', score: 4 },
-      { text: '"特别能理解，所以才安排在线上上课，就是为了节约小朋友的时间，高效学习，课程时间只需要40分钟。您看明天下午还是晚上哪个时间方便？给小朋友安排个好老师。"', feedback: '✅ 完美！先共情理解，再强调线上便利和简短时长，用二选一引导。', score: 10 },
-    ]
-  },
-  '3': {
-    title: '家长说"报了其他班"',
-    messages: [
-      { role: 'system', text: '你正在介绍课程，家长表示已经报了别的班。' },
-      { role: 'parent', text: '我们已经报了其他数学班了，暂时不考虑了，谢谢啊。' },
-    ],
-    options: [
-      { text: '"那好吧，祝小朋友学习进步！"', feedback: '❌ 就这样放弃了？家长的拒绝往往只是试探。', score: 0 },
-      { text: '"我们比他们的课程更好/更便宜！"', feedback: '⚠️ 不要贬低竞品！显得不专业且容易引起反感。', score: 3 },
-      { text: '"明白！不过我们这节课是免费的，数学考试难度加大了，好的学校也需要数学竞赛成绩。我们的课程贴合校内考点的难度和要求，还有奥数方面的拓展。我们可以让小朋友试一节课，就当是检验目前的学习效果，您看明天下午还是晚上方便试堂？"', feedback: '✅ 完美！强调免费+竞赛需求+校内贴合+检验效果，给了家长充分的试听理由。', score: 10 },
-    ]
-  },
-  '4': {
-    title: '挖需 - 了解学习情况',
-    messages: [
-      { role: 'system', text: '正在进行挖需阶段，你需要了解小朋友的学习情况。' },
-      { role: 'parent', text: '孩子现在上小二，数学成绩中等吧，应用题有时候不太会。' },
-    ],
-    options: [
-      { text: '"没关系，我们课程都能解决的。那您看什么时候方便安排试听？"', feedback: '❌ 挖需不充分！没有深入了解具体情况就急着约课。', score: 2 },
-      { text: '"小二确实是一个关键时期。小朋友具体是哪些类型的应用题觉得难？计算题还是理解题意方面？之前有没有上过数学培训班？"', feedback: '✅ 很好！先共情再把问题细化，深入了解痛点，为后续推荐精准课件打基础。', score: 10 },
-      { text: '"那我们来试试我们的王牌课程吧，保证能提高成绩！"', feedback: '❌ 过度承诺+没有针对性推荐，不专业。', score: 0 },
-    ]
-  },
-  '5': {
-    title: '确认难度 + 打预防针 + 确认陪同人',
-    messages: [
-      { role: 'system', text: '你已经完成了挖需，了解了小朋友的年级、数学基础和学习经历。现在需要向家长确认试听课的难度和时间，同时做好打预防针和确认陪同人的工作。' },
-      { role: 'cc', text: '根据刚才了解到的情况，小朋友目前在二年级，数学基础中等偏上，我帮小朋友安排的是S2阶段的试听课，课程主题是《海底派对》。这节课主要帮助小朋友建立数感和逻辑思维基础，非常适合小朋友目前的情况。试堂时间安排在明天下午4点，您看这个时间方便吗？' },
-      { role: 'parent', text: '好的，明天下午4点可以的。不过我想问一下，这个课会不会太难？我怕孩子跟不上。' },
-    ],
-    options: [
-      { text: '"不会难的，我们的老师都很有经验，肯定能教好。"', feedback: '⚠️ 缺少打预防针！没有提前告知小朋友可能的不适应情况，家长期望可能过高。', score: 4 },
-      { text: '"您放心！课程难度是根据小朋友情况匹配的。另外想温馨提醒一下：试听课是小朋友第一次接触我们的课程，开始可能会有些不适应或者反应偏慢，这是非常正常的。课堂上请您尽量不要替小朋友回答问题，让小朋友自己尝试表达，这样老师才能更准确地判断真实水平。另外想确认一下，明天上课是您陪小朋友还是爸爸陪呢？"', feedback: '✅ 完美！确认了难度和时间，打了预防针管理了家长预期，还确认了陪同人，为后续沟通做铺垫。', score: 10 },
-      { text: '"我们课程很简单的，小朋友一定没问题的！那明天见！"', feedback: '❌ 既没有打预防针，也没有确认陪同人。家长期望过高，如果小朋友表现一般反而会落差很大。', score: 0 },
-    ]
-  },
-  '6': {
-    title: '跟课提醒与课中跟进',
-    messages: [
-      { role: 'system', text: '试听课即将开始，课前30分钟你发现家长还没有上线确认，需要尽快联系。' },
-      { role: 'parent', text: '不好意思刚才在忙没看手机，我们现在就可以进入教室。' },
-    ],
-    options: [
-      { text: '"好的没问题，快进去吧，老师已经在等了。"', feedback: '⚠️ 基本回应，但可以更主动地提供帮助和确认。', score: 5 },
-      { text: '"太好了！设备都调试好了吗？如果有什么问题随时联系我。另外提醒一下，课程大概40分钟，建议家长可以在旁边观察一下小朋友的表现，课后我们可以一起交流。"', feedback: '✅ 优秀！确认设备、给出课程时长、引导家长旁听观察，为后续沟通做铺垫。', score: 10 },
-      { text: '"快点啊，老师都等急了，别耽误时间。"', feedback: '❌ 语气不当，给家长带来压力和负面体验。', score: 0 },
-    ]
-  }
-};
-
-let currentScene = null;
-
-function startAIScene() {
-  let sceneId = document.getElementById('ai-scene').value;
-  if (!sceneId) return;
-  currentScene = aiScenes[sceneId];
-  let body = document.getElementById('ai-chat-body');
-  let html = '';
-  currentScene.messages.forEach(m => {
-    if (m.role === 'system') {
-      html += '<div class="chat-msg system" style="justify-content:center;"><div class="chat-bubble" style="text-align:center;">📢 ' + m.text + '</div></div>';
-    } else if (m.role === 'cc') {
-      html += '<div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">课程顾问 · CC</div><div class="chat-bubble">' + m.text + '</div></div></div>';
-    } else {
-      html += '<div class="chat-msg parent"><div class="chat-avatar">家</div><div class="chat-content"><div class="chat-label">家长</div><div class="chat-bubble">' + m.text + '</div></div></div>';
-    }
-  });
-  body.innerHTML = html;
-
-  let optsDiv = document.getElementById('ai-options');
-  optsDiv.innerHTML = '<div style="padding:0 0 4px;font-size:13px;color:var(--text-muted);">👇 点击下方选项直接提交回答：</div>';
-  currentScene.options.forEach((opt, i) => {
-    optsDiv.innerHTML += '<button class="ai-option-card" onclick="selectAIResponse(' + i + ')"><span class="ai-opt-letter">' + String.fromCharCode(65+i) + '</span>' + opt.text + '</button>';
-  });
-  optsDiv.style.display = 'block';
-  body.scrollTop = body.scrollHeight;
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
 }
-
-function selectAIResponse(idx) {
-  if (!currentScene) return;
-  let opt = currentScene.options[idx];
-  let body = document.getElementById('ai-chat-body');
-
-  body.innerHTML += '<div class="chat-msg cc"><div class="chat-avatar">CC</div><div class="chat-content"><div class="chat-label">你（课程顾问）</div><div class="chat-bubble">' + opt.text + '</div></div></div>';
-
-  // Show feedback
-  let fbClass = opt.score >= 10 ? 'correct' : (opt.score >= 5 ? 'warning' : 'wrong');
-  body.innerHTML += '<div class="chat-msg system" style="justify-content:center;"><div class="chat-bubble" style="text-align:center;">' + opt.feedback + ' <span class="badge ' + (opt.score >= 10 ? 'badge-success' : (opt.score >= 5 ? 'badge-warning' : 'badge-danger')) + '">+' + opt.score + '分</span></div></div>';
-
-  body.scrollTop = body.scrollHeight;
-
-  // Highlight the selected card and disable all
-  let cards = document.getElementById('ai-options').querySelectorAll('.ai-option-card');
-  cards.forEach((c, i) => {
-    c.disabled = true;
-    if (i === idx) {
-      c.classList.add(opt.score >= 10 ? 'selected-correct' : (opt.score >= 5 ? '' : 'selected-wrong'));
-    }
-  });
-
-  document.getElementById('ai-scene').value = '';
-}
-
-// ==================== FINAL EXAM ====================
-const finalQuestions = [
-  { q: '1. CC课前电话的核心四大目的是？', opts: ['约课、挖需、建立关系、加微信/WhatsApp', '推销、报价、催单、收款', '闲聊、问候、介绍公司、加好友', '测试网络、确认设备、发链接、挂电话'], ans: 0 },
-  { q: '2. 开场白的正确步骤是？', opts: ['直接报价格 → 问要不要上课', '表明身份 → 告知来电目的 → 提问授权', '寒暄聊天 → 慢慢过渡到正题', '加微信 → 发资料 → 等回复'], ans: 1 },
-  { q: '3. 家长说"没时间"，正确的应对是？', opts: ['放弃这个客户', '强调线下课程的好处', '理解+强调线上只需40分钟+二选一引导', '降价吸引'], ans: 2 },
-  { q: '4. "需求"在销售中的定义是？', opts: ['客户想买的东西', '现状和期待之间的距离', '课程的价格', '客户的收入水平'], ans: 1 },
-  { q: '5. 挖需四步的正确顺序是？', opts: ['基本信息→学习经历→支付能力→学习动机', '支付能力→学习动机→基本信息→学习经历', '学习动机→基本信息→支付能力→学习经历', '学习经历→基本信息→学习动机→支付能力'], ans: 0 },
-  { q: '6. 试听课等级推荐的核心依据是？', opts: ['家长的收入', '孩子的年龄、年级和数学基础', '家长自己选', '随机分配'], ans: 1 },
-  { q: '7. 在确认试听课难度和时间后，CC还需要确认什么？', opts: ['课程价格和优惠信息', '上课时谁陪小朋友一起上课', '家长的收入水平', '家长的学历背景'], ans: 1 },
-  { q: '8. 挂机前"三个关键确认"的正确内容是？', opts: ['设备 + WhatsApp + 试探报课意向', '价格 + 时间 + 老师', 'APP + 课件 + 作业', '父母 + 年龄 + 年级'], ans: 0 },
-  { q: '9. 面对"已经报了其他班"的拒绝，正确策略是？', opts: ['贬低竞品', '放弃跟进', '强调免费体验+检验学习效果+竞赛需求', '直接降价'], ans: 2 },
-  { q: '10. 挖需还没完成时，以下哪项是禁忌？', opts: ['多问几个开放式问题', '提前报价抛优惠', '记录关键信息', '了解学习动机'], ans: 1 },
-];
-
-function buildFinalExam() {
-  let html = '';
-  finalQuestions.forEach((q, i) => {
-    html += '<div class="quiz-card"><div class="quiz-question">' + q.q + '</div>';
-    q.opts.forEach((opt, j) => {
-      html += '<button class="quiz-option" data-q="' + i + '" data-a="' + j + '" onclick="selectFinal(this)">' + String.fromCharCode(65+j) + '. ' + opt + '</button>';
-    });
-    html += '</div>';
-  });
-  document.getElementById('final-questions').innerHTML = html;
-}
-
-let finalAnswers = {};
-function selectFinal(btn) {
-  let qIdx = btn.dataset.q;
-  let aIdx = btn.dataset.a;
-  let card = btn.parentElement;
-  // remove selected from all, then apply to clicked
-  card.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('final-selected'));
-  btn.classList.add('final-selected');
-  finalAnswers[qIdx] = parseInt(aIdx);
-}
-
-let finalExamAttempts = 0;
-const maxFinalExamAttempts = 2;
-
-function submitFinalExam() {
-  let score = 0;
-  finalQuestions.forEach((q, i) => {
-    if (finalAnswers[i] === q.ans) score += 10;
-  });
-
-  finalExamAttempts++;
-  document.getElementById('exam-submit-area').style.display = 'none';
-  document.getElementById('exam-score').style.display = 'block';
-  document.getElementById('score-num').textContent = score;
-
-  let msg = '';
-  let retryBtn = document.getElementById('retry-exam-btn');
-  let certBtn = document.getElementById('cert-btn');
-  retryBtn.style.display = 'none';
-  certBtn.style.display = 'none';
-
-  if (score >= 80) {
-    msg = '🎉 恭喜！你已通过考核，获得结业证书！';
-    certBtn.style.display = 'inline-block';
-    document.getElementById('score-msg').style.color = 'var(--success)';
-  } else if (finalExamAttempts < maxFinalExamAttempts) {
-    let remaining = maxFinalExamAttempts - finalExamAttempts;
-    msg = '📚 得分不足80分，还有 ' + remaining + ' 次重做机会。点击下方按钮重新作答。';
-    retryBtn.textContent = '🔄 重新考核（第' + (finalExamAttempts + 1) + '次作答）';
-    retryBtn.style.display = 'inline-block';
-    document.getElementById('score-msg').style.color = 'var(--warning)';
-  } else {
-    msg = '📖 ' + maxFinalExamAttempts + '次机会已用完。建议回到课程页面重新复习后再来挑战。';
-    document.getElementById('score-msg').style.color = 'var(--danger)';
-  }
-  document.getElementById('score-msg').textContent = msg;
-  document.getElementById('exam-score').scrollIntoView({ behavior: 'smooth' });
-}
-
-function retryFinalExam() {
-  // Reset all answers
-  finalAnswers = {};
-  // Re-enable all options
-  document.querySelectorAll('#final-questions .quiz-option').forEach(b => {
-    b.classList.remove('correct', 'wrong', 'final-selected');
-    b.disabled = false;
-  });
-  // Show submit area, hide score
-  document.getElementById('exam-submit-area').style.display = 'block';
-  document.getElementById('exam-score').style.display = 'none';
-  document.getElementById('retry-exam-btn').style.display = 'none';
-  // Scroll to top of exam
-  document.getElementById('final-exam').scrollIntoView({ behavior: 'smooth' });
-}
-
-// ==================== CERTIFICATE ====================
-function showCertificate() {
-  let name = prompt('请输入你的名字（将显示在证书上）：', '优秀学员');
-  if (!name) name = '优秀学员';
-  document.getElementById('cert-student').textContent = name;
-  let now = new Date();
-  document.getElementById('cert-date').textContent = '颁发日期：' + now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日';
-  document.getElementById('cert-overlay').classList.add('show');
-}
-
-function closeCertificate() {
-  document.getElementById('cert-overlay').classList.remove('show');
-}
-
-// ==================== INIT ====================
-updateNav(1);
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
