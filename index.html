@@ -141,7 +141,9 @@ body {
 .quiz-option.selected { border-color: var(--primary); background: #dbeafe; }
 .quiz-option.correct { border-color: var(--success) !important; background: #ecfdf5 !important; }
 .quiz-option.wrong { border-color: var(--danger) !important; background: #fef2f2 !important; }
-.quiz-option-label { width: 30px; height: 30px; min-width: 30px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+.quiz-option.disabled { opacity: 0.5; cursor: default; border-color: #e2e8f0; background: #f8fafc; }
+.quiz-option.correct .quiz-option-label { background: var(--success); color: #fff; }
+.quiz-option.wrong .quiz-option-label { background: var(--danger); color: #fff; }
 .quiz-feedback { display: none; margin-top: 16px; padding: 16px; border-radius: var(--radius-sm); font-size: 14px; line-height: 1.7; }
 .quiz-feedback.show { display: block; }
 .quiz-feedback.correct { background: #ecfdf5; color: #065f46; }
@@ -476,15 +478,40 @@ function selectChQuizOption(el, oi, chIdx, qi) {
   if (card.dataset.answered === 'true') return;
   const q = chapterQuizzes[chIdx][qi];
   const isCorrect = oi === q.correct;
-  card.querySelectorAll('.quiz-option').forEach(b => { b.classList.add(isCorrect ? 'correct' : ''); if(parseInt(b.dataset.option) !== oi && parseInt(b.dataset.option) !== q.correct) b.style.pointerEvents='none'; });
-  card.querySelectorAll('.quiz-option[data-option="'+oi+'"]').forEach(b => b.classList.add(isCorrect?'correct':'wrong'));
-  if(!isCorrect) card.querySelectorAll('.quiz-option[data-option="'+q.correct+'"]').forEach(b => b.classList.add('correct'));
+  card.querySelectorAll('.quiz-option').forEach(b => {
+    const optIdx = parseInt(b.dataset.option);
+    b.style.pointerEvents = 'none';
+    if (optIdx === q.correct) {
+      b.classList.add('correct');
+    } else if (optIdx === oi && !isCorrect) {
+      b.classList.add('wrong');
+    } else {
+      b.classList.add('disabled');
+    }
+  });
   const fb = document.getElementById('feedback-chquiz-'+chIdx+'-'+qi);
-  fb.textContent = isCorrect ? '✅ 回答正确！' : '❌ 回答错误，正确答案是 '+String.fromCharCode(65+q.correct)+'。可以点击重做。';
-  fb.classList.add('show', isCorrect?'correct':'wrong');
+  if (isCorrect) {
+    fb.textContent = '✅ 回答正确！';
+    fb.classList.add('show', 'correct');
+  } else {
+    fb.innerHTML = '❌ 回答错误，正确答案是 <strong style="color:#991b1b;">' + String.fromCharCode(65 + q.correct) + '</strong>。<button class="btn btn-outline" style="margin-left:8px;font-size:12px;padding:4px 12px;vertical-align:middle;" onclick="resetChapterQuiz(' + chIdx + ',' + qi + ')">重新作答</button>';
+    fb.classList.add('show', 'wrong');
+    card.style.borderColor = 'var(--danger)';
+  }
   card.dataset.answered = 'true';
-  if(!isCorrect) card.style.borderColor = 'var(--danger)';
   checkChapterQuizComplete(chIdx);
+}
+function resetChapterQuiz(chIdx, qi) {
+  const card = document.getElementById('chquiz-' + chIdx + '-' + qi);
+  card.dataset.answered = 'false';
+  card.querySelectorAll('.quiz-option').forEach(b => {
+    b.classList.remove('correct', 'wrong', 'disabled');
+    b.style.pointerEvents = '';
+  });
+  card.style.borderColor = '';
+  const fb = document.getElementById('feedback-chquiz-' + chIdx + '-' + qi);
+  fb.classList.remove('show', 'correct', 'wrong');
+  fb.textContent = '';
 }
 function checkChapterQuizComplete(chIdx) {
   const allCorrect = chapterQuizzes[chIdx].every((q, qi) => {
