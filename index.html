@@ -617,7 +617,7 @@ function submitFinalTask() {
       {concept:'异议处理',terms:['害羞','担心','引导','适应','没关系','正常','体验'], weight:7},
       {concept:'挖需',terms:['了解一下','成绩','学过','培训','兴趣','喜欢','困难','薄弱'], weight:6},
       {concept:'推荐试课',terms:['S1','启蒙','最棒的演出','级别','难度','安排','匹配','适合'], weight:6},
-      {concept:'确认收尾',terms:['设备','iPad','电脑','手机','下载','WhatsApp','微信','试听完','意向','考虑','提醒'], weight:7}]
+      {concept:'确认收尾',terms:['设备','iPad','电脑','手机','下载','WhatsApp','微信','试听完','意向','考虑','提醒'], weight:7}]}
   ];
   let d1Score = 0;
   const d1Results = dims.flatMap(d => d.terms.map(t => {
@@ -630,7 +630,7 @@ function submitFinalTask() {
   const dims2 = [
     { name:'价值传递', terms:[{concept:'免费试听',terms:['免费','不收费','试听','体验'], weight:4},
       {concept:'课程优势',terms:['豌豆','素质','老师','优秀','好老师','9阶','体系','级别'], weight:4},
-      {concept:'打预防针',terms:['预防针','第一次','不适应','反应','正常','不要替答','自己尝试','表达','判断水平','评估'], weight:5}]
+      {concept:'打预防针',terms:['预防针','第一次','不适应','反应','正常','不要替答','自己尝试','表达','判断水平','评估'], weight:5}]}
   ];
   let d2Score = 0;
   dims2.flatMap(d => d.terms).forEach(t => {
