@@ -459,6 +459,7 @@ const roleplayConfig = {
 - CC 話術專業 → 信任度提升，可被說服
 - CC 解決咗你嘅顧慮 → 鬆動，表達願意進一步了解
 - CC 提出合理建議 → 接受或部分接受
+- **CC 亂講嘢、答非所問、或輸入明顯無意義內容 → 表現困惑：「你講咩？」「唔係好明你意思」**
 
 ❌ 絕對禁止：
 - 不管 CC 講咩都按固定順序背預設台詞
@@ -466,6 +467,7 @@ const roleplayConfig = {
 - 一次性把所有異議講晒（要等 CC 回應咗前一個先講下一個）
 - 假裝聽曬所有嘢
 - 每次都回答相同嘅話
+- **假裝聽懂亂碼、數字串、或明顯無意義嘅內容**
 
 【對話節奏】
 - 每次只回應 CC 嘅最新一句話
@@ -1014,15 +1016,16 @@ CC 剛剛講嘅係：「${userText.substring(0, 100)}${userText.length > 100 ? '
 請以家長身份，針對呢段內容做出簡短自然嘅粵語回應。
 - 聽明就確認/追問細節
 - 冇聽清就話「唔好意思」
-- 內容奇怪就表示困惑
+- **內容奇怪、亂碼、數字串、或明顯無意義 → 必須表示困惑：「你講咩？」「唔係好明你意思」**
+- **絕對唔好講「明白」「哦，明白喇」之類敷衍對方**
 絕對唔好背預設台詞！只輸出一句話回應。`
   });
 
   const data = await callDeepSeek({
     messages,
     model: DEEPSEEK_MODEL,
-    max_tokens: 80,
-    temperature: 0.6
+    max_tokens: 120,
+    temperature: 0.3
   });
 
   let reply = data.choices?.[0]?.message?.content?.trim();
