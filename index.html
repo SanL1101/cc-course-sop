@@ -692,6 +692,14 @@ function loadProgress() {
       chapterQuizAnswers = saved.chapterQuizAnswers || {};
       finalTaskSubmitted = saved.finalTaskSubmitted||false; finalScore = saved.finalScore||0;
       if (saved.currentSection !== undefined) currentSection = saved.currentSection;
+      // Migration: old data without chapterQuizAnswers → can't restore quiz UI, reset quiz states
+      const hasDoneButNoAnswers = chapterQuizDone.some(d => d) && Object.keys(chapterQuizAnswers).length === 0;
+      if (hasDoneButNoAnswers) {
+        chapterQuizDone = [false,false,false,false,false,false];
+      }
+      // Validate currentSection is still accessible after potential resets
+      const navCheck = canNavigateTo(currentSection);
+      if (!navCheck.ok) currentSection = 0;
       updateProgress(); updateSidebarLocks();
       if (finalTaskSubmitted) {
         const inp = document.getElementById('finalTaskInput');
@@ -702,8 +710,12 @@ function loadProgress() {
         navigateTo(currentSection);
         restoreChapterQuizUI();
       }, 100);
+    } else {
+      navigateTo(0);
     }
-  } catch (e) {}
+  } catch (e) {
+    navigateTo(0);
+  }
 }
 
 function restoreChapterQuizUI() {
@@ -737,8 +749,6 @@ function restoreChapterQuizUI() {
       }
     }
   });
-}
-  } catch(e) {}
 }
 
 // Certificate
