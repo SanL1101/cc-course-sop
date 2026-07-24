@@ -394,6 +394,7 @@ const LS_PREFIX = 'vipthink_cc_sop';
 let currentSection = 0;
 let completedSections = new Set();
 let chapterQuizDone = [false,false,false,false,false,false];
+let chapterQuizAnswers = {}; // { 'chIdx_qi': { selected: oi, isCorrect: bool } }
 let finalTaskSubmitted = false; let finalScore = 0;
 let studySeconds = 0; let timerInterval = null;
 
@@ -403,12 +404,11 @@ let studySeconds = 0; let timerInterval = null;
 function init() {
   renderSidebar();
   renderSections();
-  navigateTo(0);
+  loadProgress();
   setupQuizListeners();
   setupFinalTaskListener();
   startTimer();
   loadNotes();
-  loadProgress();
 }
 function renderSidebar() {
   const nav = document.getElementById('sidebarNav');
@@ -481,6 +481,7 @@ function selectChQuizOption(el, oi, chIdx, qi) {
     card.style.borderColor = 'var(--danger)';
   }
   card.dataset.answered = 'true';
+  chapterQuizAnswers[chIdx + '_' + qi] = { selected: oi, isCorrect: isCorrect };
   checkChapterQuizComplete(chIdx);
 }
 function resetChapterQuiz(chIdx, qi) {
@@ -679,7 +680,7 @@ function loadNotes() {
 
 // Progress persistence
 function saveProgress() {
-  const state = { completedSections: [...completedSections], chapterQuizDone, finalTaskSubmitted, finalScore };
+  const state = { completedSections: [...completedSections], chapterQuizDone, chapterQuizAnswers, finalTaskSubmitted, finalScore, currentSection };
   localStorage.setItem(LS_PREFIX+'_progress', JSON.stringify(state));
 }
 function loadProgress() {
@@ -688,13 +689,55 @@ function loadProgress() {
     if (saved) {
       completedSections = new Set(saved.completedSections||[]);
       chapterQuizDone = saved.chapterQuizDone || [false,false,false,false,false,false];
+      chapterQuizAnswers = saved.chapterQuizAnswers || {};
       finalTaskSubmitted = saved.finalTaskSubmitted||false; finalScore = saved.finalScore||0;
+      if (saved.currentSection !== undefined) currentSection = saved.currentSection;
       updateProgress(); updateSidebarLocks();
       if (finalTaskSubmitted) {
         const inp = document.getElementById('finalTaskInput');
         if (inp) inp.disabled = true;
       }
+      // Restore quiz UI and navigate to saved section
+      setTimeout(() => {
+        navigateTo(currentSection);
+        restoreChapterQuizUI();
+      }, 100);
     }
+  } catch (e) {}
+}
+
+function restoreChapterQuizUI() {
+  Object.keys(chapterQuizAnswers).forEach(key => {
+    const [chIdx, qi] = key.split('_').map(Number);
+    if (isNaN(chIdx) || isNaN(qi)) return;
+    const ans = chapterQuizAnswers[key];
+    if (!ans) return;
+    const card = document.getElementById('chquiz-' + chIdx + '-' + qi);
+    if (!card) return;
+    const q = chapterQuizzes[chIdx] && chapterQuizzes[chIdx][qi];
+    if (!q) return;
+    card.dataset.answered = 'true';
+    const options = card.querySelectorAll('.quiz-option');
+    options.forEach(b => {
+      const oi = parseInt(b.dataset.option);
+      b.style.pointerEvents = 'none';
+      if (oi === q.correct) b.classList.add('correct');
+      else if (oi === ans.selected && !ans.isCorrect) b.classList.add('wrong');
+      else b.classList.add('disabled');
+    });
+    const fb = document.getElementById('feedback-chquiz-' + chIdx + '-' + qi);
+    if (fb) {
+      if (ans.isCorrect) {
+        fb.textContent = '✅ 回答正确！';
+        fb.classList.add('show', 'correct');
+      } else {
+        fb.innerHTML = '❌ 回答错误，正确答案是 <strong style="color:#991b1b;">' + String.fromCharCode(65 + q.correct) + '</strong>。<button class="btn btn-outline" style="margin-left:8px;font-size:12px;padding:4px 12px;vertical-align:middle;" onclick="resetChapterQuiz(' + chIdx + ',' + qi + ')">重新作答</button>';
+        fb.classList.add('show', 'wrong');
+        card.style.borderColor = 'var(--danger)';
+      }
+    }
+  });
+}
   } catch(e) {}
 }
 
