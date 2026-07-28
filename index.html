@@ -422,10 +422,10 @@ const roleplayConfig = {
     { label: '⑤ 挖需：學習經歷', hint: '了解之前有冇上過數學班、校內成績、有冇參加競賽' },
     { label: '⑥ 挖需：支付能力', hint: '用間接方式了解家庭對教育投入嘅態度' },
     { label: '⑦ 挖需：學習動機', hint: '了解家長讓小朋友學數學嘅深層目標' },
-    { label: '⑧ 推薦試課', hint: '根據K3年齡推薦S1啟蒙段《最棒的演出》+ 打預防針' },
+    { label: '⑧ 推薦試課', hint: '根據K3年齡推薦S3《新智闖懸浮島》+ 打預防針' },
     { label: '⑨ 確認收尾', hint: '確認設備 + WhatsApp + 試探報課意向 + 禮貌掛機' }
   ],
-  openingLine: '喂，你好，請問係咪XX媽咪？',
+  openingLine: '喂，你好，請問係邊個？',
   parentSystemPrompt: `你扮演一位香港家長（女兒6歲，K3），正在接聽豌豆素質課程顧問（CC）打嚟嘅課前電話。
 
 【背景信息】
@@ -483,13 +483,13 @@ const roleplayConfig = {
 【評分標準】（滿分100分）
 
 1. 流程規範性（30分）：是否按正確順序完成課前電話全流程
-   - 開場白（表明身份 + 來電目的 + 提及平台）→ 提問授權 → 異議處理（害羞/擔心）→ 挖需四步（基本信息/學習經歷/支付能力/學習動機）→ 推薦試課（S1啟蒙段/最棒的演出/打預防針）→ 確認收尾（設備/WhatsApp/報課意向/禮貌掛機）
+   - 開場白（表明身份 + 來電目的 + 提及平台）→ 提問授權 → 異議處理（害羞/擔心）→ 挖需四步（基本信息/學習經歷/支付能力/學習動機）→ 推薦試課（S3《新智闖懸浮島》/打預防針）→ 確認收尾（設備/WhatsApp/報課意向/禮貌掛機）
    - 流程唔完整或順序混亂扣分
    - 每個環節清晰完整先畀滿分，蜻蜓點水帶過就扣分
 
 2. 信息準確性（30分）：傳遞嘅課程信息是否準確、完整、專業
-   - S1 啟蒙段對應 K3 學員嘅年齡匹配
-   - 廣東話版《最棒的演出》係 S1 中唯一有粵語字體/提示音/動畫嘅主題
+   - S3《新智闖懸浮島》對應 K3 學員嘅年齡匹配
+   - S3《新智闖懸浮島》主題內容（輕重排序問題）
    - 課程特色（遊戲化教學、4-6人小班、三對一服務）
    - 異議處理話術（YES..BUT 結構、引導型老師承諾、打預防針）
    - 確認設備（電腦/iPad/手機）+ WhatsApp 添加 + 試探報課意向
@@ -556,22 +556,32 @@ function checkStudentLimit() {
   return true;
 }
 
-async function callDeepSeek(body) {
-  const response = await fetch(DEEPSEEK_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + _rK()
-    },
-    body: JSON.stringify(body)
-  });
-  if (!response.ok) {
-    const errText = await response.text();
-    let errMsg = `AI 服務暫時不可用 (${response.status})`;
-    try { const j = JSON.parse(errText); errMsg = j.error?.message || j.message || errMsg; } catch(e) {}
-    throw new Error(errMsg);
+async function callDeepSeek(body, timeoutMs = 25000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const response = await fetch(DEEPSEEK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + _rK()
+      },
+      body: JSON.stringify(body),
+      signal: ctrl.signal
+    });
+    if (!response.ok) {
+      const errText = await response.text();
+      let errMsg = `AI 服務暫時不可用 (${response.status})`;
+      try { const j = JSON.parse(errText); errMsg = j.error?.message || j.message || errMsg; } catch(e) {}
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error('AI 回應超時，請重試');
+    throw err;
+  } finally {
+    clearTimeout(timer);
   }
-  return await response.json();
 }
 
 // 健康檢查（5分鐘快取，避免每次請求都打探）
@@ -821,7 +831,7 @@ function renderRoleplayHTML() {
         <span>本練習由公司統一提供 AI 對話能力，<b>無需配置 API Key</b>。<b>自由對話模式</b>：像真打電話一樣同 AI 家長傾，覆蓋必要話題後點「結束對話 & 評分」即可。</span>
       </div>
 
-      <div class="rp-scenario"><strong>📋 場景：</strong>${roleplayConfig.scenario}<br><br><strong>📌 考核流程：</strong>開場白 → 提問授權 → 異議處理（害羞/擔心）→ 挖需四步 → 推薦試課（S1啟蒙段/最棒的演出）→ 確認收尾</div>
+      <div class="rp-scenario"><strong>📋 場景：</strong>${roleplayConfig.scenario}<br><br><strong>📌 考核流程：</strong>開場白 → 提問授權 → 異議處理（害羞/擔心）→ 挖需四步 → 推薦試課（S3《新智闖懸浮島》）→ 確認收尾</div>
 
       <!-- 話題進度指引 -->
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;" id="rpTopicList">
@@ -917,51 +927,52 @@ async function submitRoleplayMessage() {
   let parentReply = '好嘅，請繼續。';
   let aiUsed = false;
 
-  if (!checkStudentLimit()) {
-    if (typeof showToast === 'function') showToast('⚠️ 本小時練習次數已達上限，請稍後再試', 'warning');
-  } else {
-    const backendOK = await checkBackendHealth();
-    if (backendOK) {
-      try {
-        parentReply = await callParentAI(text);
-        aiUsed = true;
-      } catch (err) {
-        console.warn('AI 家長回應失敗:', err.message);
-        if (typeof showToast === 'function') showToast('⚠️ AI 回應失敗，請重試', 'warning');
-      }
+  try {
+    if (!checkStudentLimit()) {
+      if (typeof showToast === 'function') showToast('⚠️ 本小時練習次數已達上限，請稍後再試', 'warning');
     } else {
-      if (typeof showToast === 'function') showToast('⚠️ AI 服務暫時不可用，請稍後再試', 'warning');
+      const backendOK = await checkBackendHealth();
+      if (backendOK) {
+        try {
+          parentReply = await callParentAI(text);
+          aiUsed = true;
+        } catch (err) {
+          console.warn('AI 家長回應失敗:', err.message);
+          if (typeof showToast === 'function') showToast('⚠️ ' + err.message, 'warning');
+        }
+      } else {
+        if (typeof showToast === 'function') showToast('⚠️ AI 服務暫時不可用，請稍後再試', 'warning');
+      }
     }
+
+    // 顯示家長回覆
+    const replyLabel = aiUsed ? '🤖 AI 家長' : '👩 家長';
+    chatArea.innerHTML += `<div class="rp-history-item parent">${replyLabel}：${parentReply.replace(/</g,'&lt;')}</div>`;
+    chatArea.scrollTop = chatArea.scrollHeight;
+    roleplayConversation.push({ role: 'parent', content: parentReply, aiUsed: aiUsed });
+
+    // 更新計數和話題
+    const countEl = document.getElementById('rpExchangeCount');
+    if (countEl) countEl.innerHTML = `📞 對話輪數：<b>${roleplayExchangeCount}</b>`;
+
+    // 根據對話長度推斷當前話題
+    const topicIdx = inferCurrentTopic();
+    if (topicIdx >= 0 && topicIdx < roleplayConfig.topics.length) {
+      const topicEl = document.getElementById('rpCurrentTopic');
+      if (topicEl) topicEl.textContent = roleplayConfig.topics[topicIdx].label + ' — ' + roleplayConfig.topics[topicIdx].hint;
+      updateTopicHighlight(topicIdx);
+    } else {
+      const topicEl = document.getElementById('rpCurrentTopic');
+      if (topicEl) topicEl.textContent = '自由對話中...';
+    }
+  } finally {
+    // 無論成功或失敗，都必須清除 loading 並恢復輸入
+    if (typing) typing.style.display = 'none';
+    input.value = '';
+    input.disabled = false;
+    if (submitBtn) submitBtn.disabled = false;
+    input.focus();
   }
-
-  if (typing) typing.style.display = 'none';
-
-  // 顯示家長回覆
-  const replyLabel = aiUsed ? '🤖 AI 家長' : '👩 家長';
-  chatArea.innerHTML += `<div class="rp-history-item parent">${replyLabel}：${parentReply.replace(/</g,'&lt;')}</div>`;
-  chatArea.scrollTop = chatArea.scrollHeight;
-  roleplayConversation.push({ role: 'parent', content: parentReply, aiUsed: aiUsed });
-
-  // 更新計數和話題
-  const countEl = document.getElementById('rpExchangeCount');
-  if (countEl) countEl.innerHTML = `📞 對話輪數：<b>${roleplayExchangeCount}</b>`;
-
-  // 根據對話長度推斷當前話題
-  const topicIdx = inferCurrentTopic();
-  if (topicIdx >= 0 && topicIdx < roleplayConfig.topics.length) {
-    const topicEl = document.getElementById('rpCurrentTopic');
-    if (topicEl) topicEl.textContent = roleplayConfig.topics[topicIdx].label + ' — ' + roleplayConfig.topics[topicIdx].hint;
-    updateTopicHighlight(topicIdx);
-  } else {
-    const topicEl = document.getElementById('rpCurrentTopic');
-    if (topicEl) topicEl.textContent = '自由對話中...';
-  }
-
-  // 恢復輸入
-  input.value = '';
-  input.disabled = false;
-  if (submitBtn) submitBtn.disabled = false;
-  input.focus();
 }
 
 // 推斷當前所處嘅話題階段
